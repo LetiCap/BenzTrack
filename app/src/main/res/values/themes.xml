@@ -1,9 +1,38 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.BenzTrack" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.BenzTrack.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorOnPrimary">@color/colorWhite</item>
+
+        <item name="colorSecondary">@color/colorBlack</item>
+        <item name="colorOnSecondary">@color/colorBlack</item>
+
+        <item name="editTextStyle">@style/app_editTextStyle</item>
+        <item name="android:textViewStyle">@style/app_textViewStyle</item>
+        <item name="materialButtonStyle">@style/app_ButtonStyle</item>
+
     </style>
 
-    <style name="Theme.BenzTrack" parent="Base.Theme.BenzTrack" />
+    <style name="app_textViewStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+
+    <style name="app_editTextStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="app_ButtonStyle" parent="Widget.MaterialComponents.Button">
+
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+    </style>
+
+
+
+
+    <style name="Base.Theme.BenzTrack" parent="Theme.Material3.DayNight" />
 </resources>
