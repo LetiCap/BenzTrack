@@ -38,7 +38,7 @@
 
 
 
-
+<!-- bisogna mettere il parent come sopra -->
     <style name="Base.Theme.BenzTrack" parent="Theme.AppCompat.Light.DarkActionBar" >
 
         <item name="colorPrimary">@color/colorBlue</item>
