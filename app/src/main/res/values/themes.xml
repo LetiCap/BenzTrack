@@ -4,35 +4,73 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
-        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimary">@color/colorBlue</item>
         <item name="colorOnPrimary">@color/colorWhite</item>
+        <item name="colorSecondary">@color/colorLightBlue</item>
+        <item name="colorOnSecondary">@color/colorWhite</item>
 
-        <item name="colorSecondary">@color/colorBlack</item>
-        <item name="colorOnSecondary">@color/colorBlack</item>
+        <item name="colorOnBackground">@color/colorBlack</item>
+        <item name="colorOnSurface">@color/colorWhite</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
 
-        <item name="editTextStyle">@style/app_editTextStyle</item>
         <item name="android:textViewStyle">@style/app_textViewStyle</item>
         <item name="materialButtonStyle">@style/app_ButtonStyle</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
 
     </style>
+
+    <style name="app_textViewStyle_NoAction" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <!--<style name="app_editTextStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style> -->
+
+    <style name="app_ButtonStyle_NoAction" parent="Widget.MaterialComponents.Button">
+
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
+    </style>
+
+
+
+
+
+
+
+    <style name="Base.Theme.BenzTrack" parent="Theme.AppCompat.Light.DarkActionBar" >
+
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorOnPrimary">@color/colorWhite</item>
+        <item name="colorSecondary">@color/colorLightBlue</item>
+        <item name="colorOnSecondary">@color/colorWhite</item>
+
+        <item name="colorOnBackground">@color/colorBlack</item>
+        <item name="colorOnSurface">@color/colorWhite</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
+
+
+        <item name="android:textViewStyle">@style/app_textViewStyle</item>
+        <item name="materialButtonStyle">@style/app_ButtonStyle</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+
+    </style>
+
+
+
 
     <style name="app_textViewStyle" parent="@android:style/Widget.TextView">
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
 
-    <style name="app_editTextStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
-    </style>
-
     <style name="app_ButtonStyle" parent="Widget.MaterialComponents.Button">
 
         <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
     </style>
 
 
 
-
-    <style name="Base.Theme.BenzTrack" parent="Theme.Material3.DayNight" />
 </resources>
