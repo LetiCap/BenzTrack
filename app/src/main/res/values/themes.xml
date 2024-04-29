@@ -63,12 +63,9 @@
 
 
     <style name="app_BottomNAvStyle" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
-        <item name="colorPrimary">@color/colorBlue</item>
-        <item name="colorOnPrimary">@color/colorWhite</item>
 
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
-        <item name="itemIconTint">?attr/colorOnPrimary</item>
+
+
 
     </style>
 
