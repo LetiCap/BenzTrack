@@ -4,12 +4,12 @@
     <item android:id="@+id/home"
         android:title="Home"
         android:icon="@drawable/baseline_home_24"/>
-    ù
+
     <item android:id="@+id/notification"
         android:title="Notification"
         android:icon="@drawable/baseline_circle_notifications_24"/>
 
-    <item android:id="@+id/settinng"
+    <item android:id="@+id/setting"
         android:title="Setting"
         android:icon="@drawable/baseline_app_settings_alt_24"/>
 </menu>
