@@ -13,8 +13,8 @@
         <item name="colorOnSurface">@color/colorWhite</item>
         <item name="android:windowBackground">@color/colorWhite</item>
 
-        <item name="android:textViewStyle">@style/app_textViewStyle</item>
-        <item name="materialButtonStyle">@style/app_ButtonStyle</item>
+        <item name="android:textViewStyle">@style/app_textViewStyle_NoAction</item>
+        <item name="materialButtonStyle">@style/app_ButtonStyle_NoAction</item>
         <item name="android:textColorPrimary">@color/colorWhite</item>
 
     </style>
@@ -39,7 +39,7 @@
 
 
 <!-- bisogna mettere il parent come sopra -->
-    <style name="Base.Theme.BenzTrack" parent="Theme.AppCompat.Light.DarkActionBar" >
+    <style name="Base.Theme.BenzTrack" parent="Theme.Material3.DayNight" >
 
         <item name="colorPrimary">@color/colorBlue</item>
         <item name="colorOnPrimary">@color/colorWhite</item>
@@ -50,11 +50,32 @@
         <item name="colorOnSurface">@color/colorWhite</item>
         <item name="android:windowBackground">@color/colorWhite</item>
 
-
         <item name="android:textViewStyle">@style/app_textViewStyle</item>
         <item name="materialButtonStyle">@style/app_ButtonStyle</item>
         <item name="android:textColorPrimary">@color/colorWhite</item>
+        <item name="bottomNavigationStyle">@style/app_BottomNAvStyle</item>
+        <item name="actionBarStyle">@style/app_ActionBarStyle</item>
 
+    </style>
+
+
+
+
+
+    <style name="app_BottomNAvStyle" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorOnPrimary">@color/colorWhite</item>
+
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="itemIconTint">?attr/colorOnPrimary</item>
+
+    </style>
+
+
+    <style name="app_ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Solid">
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
     </style>
 
 
@@ -70,11 +91,5 @@
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:backgroundTint">?attr/colorSecondary</item>
     </style>
-
-
-
-
-
-
 
 </resources>
