@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
+
 class AddingCarFragment : Fragment() {
 
     override fun onCreateView(
@@ -49,6 +50,10 @@ class AddingCarFragment : Fragment() {
             }
 
         }
+    }
+    private fun fetchData( tipo: String,anno: String , marca: String ){
+
+
     }
 
 
