@@ -52,12 +52,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="100dp"
             android:layout_marginRight="50dp"
             android:text="Texacchina di diotView"
             android:textAlignment="center"
             android:textColor="@color/colorLightBlue"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="100dp"
+            android:theme="@style/app_ButtonStyle"
+
+            android:text="Button" />
 
 
     </LinearLayout>
