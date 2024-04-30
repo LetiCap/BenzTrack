@@ -2,6 +2,7 @@ package com.example.benztrack
 
 import android.app.VoiceInteractor
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -46,26 +48,29 @@ class AddingCarFragment : Fragment() {
             val marca = inMarca.text.toString()
             val anno = inAnno.text.toString()
             val tipo = inTipo.text.toString()
-            /*
+
             if (marca.isBlank() || anno.isBlank() || tipo.isBlank()) {
                 Toast.makeText(requireContext(), "inserire tutti i parametri", Toast.LENGTH_LONG)
                     .show()
 
-            } else {*/
+            } else {
                 // Crea una stringa concatenando i testi degli EditText
+                //val concatenatedText = "$marca $anno $tipo 1"
+               // outRes.text = concatenatedText
                 fetchData(tipo, anno, marca, outRes)
-                /*val concatenatedText = "$marca $anno $tipo"
-                outRes.text = concatenatedText*/
-           // }
+
+            }
 
         }
     }
 
     private fun fetchData(tipo: String, anno: String, marca: String, testo: TextView) {
-        val requestUrl =
-            "https://car-data.p.rapidapi.com/cars?limit=10&page=0&marca=$marca&anno=$anno&tipo=$tipo"
 
-        // Esegui la chiamata API in un thread separato
+        // Il resto del tuo codice per effettuare la chiamata di rete e gestire la risposta
+        val requestUrl =
+            "https://car-data.p.rapidapi.com/cars?limit=1&page=0&year=$anno&make=$marca&type=$tipo"
+
+        // Esegui la chiamata API in un thread separato utilizzando coroutine
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
@@ -81,25 +86,20 @@ class AddingCarFragment : Fragment() {
 
                 val response = client.newCall(request).execute()
 
-                if (response.isSuccessful) {
-                    val responseBody = response.body?.string()
-                    // Puoi manipolare il corpo della risposta qui
-                    // Assicurati di eseguire operazioni sull'interfaccia utente sul thread UI principale
+                // Accedi al thread UI per aggiornare il TextView con la risposta
 
-                    activity?.runOnUiThread {
-                        // Esempio di visualizzazione del corpo della risposta in un TextView
-                        testo.text = responseBody
-                    }
-                } else {
-                    // Gestisci il caso in cui la richiesta non ha avuto successo
-                    activity?.runOnUiThread {
-                        // Esempio di visualizzazione di un messaggio di errore in un TextView
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        testo.text = response.body?.string()
+                    } else {
                         testo.text = "Errore nella richiesta: ${response.code}"
                     }
                 }
             } catch (e: IOException) {
-                // Gestisci l'eccezione IO (ad esempio, connessione di rete interrotta)
-                e.printStackTrace()
+                // Accedi al thread UI per gestire l'eccezione di connessione
+                withContext(Dispatchers.Main) {
+                    testo.text = "Errore di connessione: ${e.message}"
+                }
             }
         }
     }
