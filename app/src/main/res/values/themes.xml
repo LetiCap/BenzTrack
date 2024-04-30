@@ -59,7 +59,7 @@
 
     </style>
 
-    <style name="app_editTextStyle" parent="@android:style/Widget.TextView">
+    <style name="app_editTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
 
