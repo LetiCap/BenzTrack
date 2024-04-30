@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     // Funzione per sostituire il frammento nel contenitore del frammento
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment, fragment)
+            .replace(R.id.container, fragment)
             .commit()
     }
 }
