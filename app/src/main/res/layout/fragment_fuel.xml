@@ -3,17 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
-
+    tools:context=".Fuel">
 
     <TextView
-        android:id="@+id/text_home"
+        android:id="@+id/text_fuel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Benvenuto nella schermata Home!"
+        android:layout_gravity="center"
+        android:text="Benvenuto nella schermata Fuel!"
         android:textColor="@color/colorLightBlue"
-        android:textSize="18sp"
-        android:layout_gravity="center"/>
-
+        android:textSize="18sp" />
 
 </FrameLayout>

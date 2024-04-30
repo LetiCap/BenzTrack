@@ -20,12 +20,20 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.notification -> {
+                R.id.add_car -> {
                     replaceFragment(AddingCarFragment())
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.setting -> {
-                    //replaceFragment(SettingFragment())
+                R.id.add_fuel ->{
+                    replaceFragment(Fuel())
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.bollo -> {
+                    replaceFragment(AddBollo())
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.assicurazione ->{
+                    replaceFragment(AddAssicurazione())
                     return@setOnNavigationItemSelectedListener true
                 }
                 else -> return@setOnNavigationItemSelectedListener false

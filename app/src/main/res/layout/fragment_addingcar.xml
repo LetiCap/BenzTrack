@@ -5,15 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".AddingCarFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <!-- layout/fragment_home.xml -->
+
 
     <TextView
-        android:id="@+id/text_home"
+        android:id="@+id/text_addcar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Benvenuto nella schermata Notifiche!"
+        android:text="Benvenuto nella schermata Auto!"
         android:textColor="@color/colorLightBlue"
         android:textSize="18sp" />
 
