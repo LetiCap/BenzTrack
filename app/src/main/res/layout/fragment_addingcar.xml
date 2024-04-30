@@ -3,51 +3,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".AddingCarFragment">
 
 
-
-    <TextView
-        android:id="@+id/text_addcar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Benvenuto nella schermata Auto!"
-        android:textColor="@color/colorLightBlue"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/Marca"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="163dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/Anno"
-        android:layout_width="match_parent"
-        android:layout_height="173dp"
-        android:ems="10"
-        android:inputType="text" />
 
-    <Button
-        android:id="@+id/btnAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Bottone" />
+        <EditText
+            android:id="@+id/Marca"
 
-    <EditText
-        android:id="@+id/tipo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+
+            android:hint="Marca" />
+
+        <EditText
+            android:id="@+id/Anno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+
+
+            android:layout_marginRight="50dp"
+            android:hint="Anno" />
+
+        <EditText
+            android:id="@+id/Tipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+
+
+            android:layout_marginRight="50dp"
+            android:hint="Tipo" />
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="200dp"
+            android:layout_marginRight="50dp"
+            android:text="Texacchina di diotView"
+            android:textAlignment="center"
+            android:textColor="@color/colorLightBlue"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
 
 
 </FrameLayout>

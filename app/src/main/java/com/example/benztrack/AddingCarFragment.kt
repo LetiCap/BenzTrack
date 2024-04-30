@@ -30,14 +30,7 @@ class AddingCarFragment : Fragment() {
             resultLauncher.launch()
         }
 
-        val userInput = editText.text.toString()
-        val apiUrl = "https://car-data.p.rapidapi.com/cars?limit=10&page=0&query=$userInput"
-        val request = Request.Builder()
-            .url(apiUrl)
-            .get()
-            .addHeader("X-RapidAPI-Key", "3d2a9c66e1msh98394268003597ep10489bjsn42dc7dfe3373")
-            .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
-            .build()
+
 
     }*/
 
