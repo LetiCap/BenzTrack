@@ -55,10 +55,13 @@
         <item name="android:textColorPrimary">@color/colorWhite</item>
         <item name="bottomNavigationStyle">@style/app_BottomNAvStyle</item>
         <item name="actionBarStyle">@style/app_ActionBarStyle</item>
+        <item name="editTextStyle">@style/app_editTextStyle</item>
 
     </style>
 
-
+    <style name="app_editTextStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
 
 
 
