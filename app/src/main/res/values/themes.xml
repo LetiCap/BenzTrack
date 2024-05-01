@@ -3,38 +3,62 @@
     <style name="Base.Theme.BenzTrack.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-
         <item name="colorPrimary">@color/colorBlue</item>
         <item name="colorOnPrimary">@color/colorWhite</item>
         <item name="colorSecondary">@color/colorLightBlue</item>
         <item name="colorOnSecondary">@color/colorWhite</item>
+        <item name="colorTertiaryContainer">@color/colorDutchWhite</item>
 
         <item name="colorOnBackground">@color/colorBlack</item>
         <item name="colorOnSurface">@color/colorWhite</item>
         <item name="android:windowBackground">@color/colorWhite</item>
 
-        <item name="android:textViewStyle">@style/app_textViewStyle_NoAction</item>
-        <item name="materialButtonStyle">@style/app_ButtonStyle_NoAction</item>
+        <item name="android:textViewStyle">@style/app_textViewStyle</item>
+        <item name="materialButtonStyle">@style/app_ButtonStyle</item>
         <item name="android:textColorPrimary">@color/colorWhite</item>
-
+        <item name="bottomNavigationStyle">@style/app_BottomNAvStyle</item>
+        <item name="editTextStyle">@style/app_editTextStyle</item>
+        <item name="spinnerStyle">@style/app_SpinnerStyle</item>
 
 
 
 
     </style>
+
+    <style name="app_editTextStyle_NoAction" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+
+
+    <style name="app_BottomNAvStyle_NoAction" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+
+
+    </style>
+
+
+
+
+
+
+
 
     <style name="app_textViewStyle_NoAction" parent="@android:style/Widget.TextView">
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
-    <!--<style name="app_editTextStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
-    </style> -->
 
     <style name="app_ButtonStyle_NoAction" parent="Widget.MaterialComponents.Button">
 
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:backgroundTint">?attr/colorSecondary</item>
+
+    </style>
+
+
+    <style name="app_SpinnerStyle_NoAction" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:background">?attr/colorTertiaryContainer</item>
     </style>
 
 
@@ -104,6 +128,7 @@
 
     <style name="app_SpinnerStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
         <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:dropDownSelector">?attr/colorSecondary</item>
         <item name="android:background">?attr/colorTertiaryContainer</item>
     </style>
 

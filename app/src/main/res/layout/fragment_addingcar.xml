@@ -16,15 +16,22 @@
 
         <EditText
             android:id="@+id/Marca"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:layout_marginRight="50dp"
-
             android:hint="Marca"
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/Modello"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="50dp"
+            android:hint="Modello"
             android:minHeight="48dp" />
 
         <EditText
@@ -32,28 +39,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="35dp"
             android:layout_marginRight="50dp"
-            android:minHeight="48dp"
-            android:hint="Anno" />
+            android:hint="Anno"
+            android:minHeight="48dp" />
 
         <EditText
             android:id="@+id/Tipo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
-
+            android:layout_marginTop="35dp"
             android:layout_marginRight="50dp"
             android:hint="Tipo"
             android:minHeight="48dp" />
+
+
+
 
         <TextView
             android:id="@+id/result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="35dp"
             android:layout_marginRight="50dp"
             android:text=""
             android:textAlignment="center"

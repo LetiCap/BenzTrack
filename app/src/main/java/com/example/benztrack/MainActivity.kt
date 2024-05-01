@@ -1,6 +1,7 @@
 package com.example.benztrack
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,9 +17,12 @@ class MainActivity : AppCompatActivity() {
         //cambio fragment a seconda del tasto selezionato
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+
             when (item.itemId) {
+
                 R.id.home -> {
                     replaceFragment(HomeFragment())
+
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.add_car -> {
