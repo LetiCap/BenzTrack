@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //cambio fragment a seconda del tasto selezionato
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -50,4 +51,5 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.container, fragment)
             .commit()
     }
+
 }

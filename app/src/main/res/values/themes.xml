@@ -100,9 +100,12 @@
 
     </style>
 
+
     <style name="app_SpinnerStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:background">?attr/colorSurface</item>
     </style>
+
 
 
 </resources>

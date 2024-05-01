@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 class HomeFragment : Fragment() {
@@ -18,6 +22,35 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // You can initialize views and handle UI interactions here
+
+        // Inizializzazione dello Spinner
+        val vehicleSpinner: Spinner = view.findViewById(R.id.veichleSpinner)
+
+        // Lista di veicoli
+        val vehicleList = listOf("Auto", "Moto", "Bicicletta")
+
+        // Creazione dell'adapter
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, vehicleList)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Collegamento dell'adapter allo Spinner
+        vehicleSpinner.adapter = adapter
+
+        //valore iniziale
+        vehicleSpinner.setSelection(0)
+
+        // Gestione dell'evento di selezione dello Spinner
+        vehicleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Azioni da eseguire quando un elemento viene selezionato
+                val selectedVehicle = parent?.getItemAtPosition(position).toString()
+                // Esempio di azione: visualizzare il veicolo selezionato
+                Toast.makeText(requireContext(), "Veicolo selezionato: $selectedVehicle", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Azioni da eseguire quando nessun elemento è selezionato
+            }
+        }
     }
 }

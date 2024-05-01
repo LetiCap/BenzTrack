@@ -17,14 +17,14 @@
         android:textSize="18sp" />
 
     <Spinner
-        android:id="@+id/visualizza_veicolo"
+        android:id="@+id/veichleSpinner"
         android:layout_width="match_parent"
-        android:layout_height="82dp"
+        android:layout_height="51dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="70dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
-        />
+        android:clickable="true" />
 
 
 </FrameLayout>
