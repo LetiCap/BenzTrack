@@ -14,44 +14,44 @@
         android:padding="16dp">
 
 
-        <EditText
-            android:id="@+id/Marca"
+        <Spinner
+            android:id="@+id/Marchio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="50dp"
             android:layout_marginRight="50dp"
-            android:hint="Marca"
+            android:clickable="true"
             android:minHeight="48dp" />
 
-        <EditText
+        <Spinner
             android:id="@+id/Modello"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="35dp"
             android:layout_marginRight="50dp"
-            android:hint="Modello"
+            android:clickable="true"
             android:minHeight="48dp" />
 
-        <EditText
+        <Spinner
             android:id="@+id/Anno"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="35dp"
             android:layout_marginRight="50dp"
-            android:hint="Anno"
+            android:clickable="true"
             android:minHeight="48dp" />
 
-        <EditText
+        <Spinner
             android:id="@+id/Tipo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="35dp"
             android:layout_marginRight="50dp"
-            android:hint="Tipo"
+            android:clickable="true"
             android:minHeight="48dp" />
 
 
