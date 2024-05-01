@@ -48,6 +48,7 @@
         <item name="colorOnPrimary">@color/colorWhite</item>
         <item name="colorSecondary">@color/colorLightBlue</item>
         <item name="colorOnSecondary">@color/colorWhite</item>
+        <item name="colorTertiaryContainer">@color/colorDutchWhite</item>
 
         <item name="colorOnBackground">@color/colorBlack</item>
         <item name="colorOnSurface">@color/colorWhite</item>
@@ -102,8 +103,8 @@
 
 
     <style name="app_SpinnerStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:background">?attr/colorTertiaryContainer</item>
     </style>
 
 
