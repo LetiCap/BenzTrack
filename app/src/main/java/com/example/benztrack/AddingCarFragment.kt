@@ -103,7 +103,7 @@ class AddingCarFragment : Fragment() {
 
 
         }
-        if (lista.isEmpty()) {
+
 
             lista.add(0,"Seleziona un $scritta")
             val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
@@ -148,17 +148,7 @@ class AddingCarFragment : Fragment() {
             } catch (e: IOException) {
                 Log.e("AddingCarFragment", "Errore di connessione: ${e.message}")
             }
-        } else {
-            withContext(Dispatchers.Main) {
-                val adapter = ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_item,
-                    lista
-                )
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = adapter
-            }
-        }
+
     }
 
 
