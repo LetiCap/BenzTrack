@@ -60,9 +60,9 @@ class AddingCarFragment : Fragment() {
 
         lifecycleScope.launch {
             populateSpinner("makes", MarchioSpinner, MarchioList)
-            delay(500)
+          //  delay(100)
             populateSpinner("years", AnnoSpinner, AnnoList)
-            delay(500)
+          //  delay(100)
             populateSpinner("types",TipoSpinner,TipoList)
         }
 
