@@ -1,3 +1,4 @@
+
 package com.example.benztrack
 
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -48,78 +50,64 @@ class AddingCarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val ModelloSpinner: Spinner = view.findViewById(R.id.Modello)
+        //val ModelloSpinner: Spinner = view.findViewById(R.id.Modello)
         val TipoSpinner: Spinner = view.findViewById(R.id.Tipo)
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
         val btn = view.findViewById<Button>(R.id.btnAdd)
         val outRes = view.findViewById<TextView>(R.id.result)
 
-        populateSpinner("makes",MarchioSpinner,MarchioList)
-       populateSpinner("years",AnnoSpinner,AnnoList)
 
-      //  populateSpinner("models",ModelloSpinner,ModelloList)
-     //   populateSpinner("type",TipoSpinner,TipoList)
+        lifecycleScope.launch {
+            populateSpinner("makes", MarchioSpinner, MarchioList)
+            delay(500)
+            populateSpinner("years", AnnoSpinner, AnnoList)
+            delay(500)
+            populateSpinner("types",TipoSpinner,TipoList)
+        }
 
-/*
-        val ModellliList = listOf("Seleziona un Modello", "ProMaster City", "Moto", "Bicicletta")
-        val adapterModelloSpinner =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, ModellliList)
-        adapterModelloSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        ModelloSpinner.adapter = adapterModelloSpinner
 
-        val TipoList = listOf("Seleziona un Tipo", "Van/Minivan", "Moto", "Bicicletta")
-        val adapterTipoSpinner =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, TipoList)
-        adapterTipoSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        TipoSpinner.adapter = adapterTipoSpinner
+        //
 
-        val AnnoList = listOf("Seleziona un Anno", "2019", "Moto", "Bicicletta")
-        val adapterAnnoSpinner =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, AnnoList)
-        adapterAnnoSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        AnnoSpinner.adapter = adapterAnnoSpinner
 
-        val MarchioList = listOf("Seleziona un Marchio", "Ram", "Moto", "Bicicletta")
-        val adapterMarchioSpinner =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, MarchioList)
-        adapterMarchioSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        MarchioSpinner.adapter = adapterMarchioSpinner
-*/
 
-        // Imposta il listener per lo spinner Tipo
-        // Imposta il listener per lo spinner Marchio
-        // Imposta il listener per lo spinner Anno
-        // Imposta il listener per lo spinner Modello
-
-      // TipoSpinner.onItemSelectedListener = createItemSelectedListener(TipoList,"Tipo")
         MarchioSpinner.onItemSelectedListener = createItemSelectedListener( MarchioList,"Marchio")
+        TipoSpinner.onItemSelectedListener = createItemSelectedListener(TipoList,"Tipo")
 
+        //ModelloSpinner.onItemSelectedListener = createItemSelectedListener( ModelloList, "Modello")
 
-        Log.e("AddingCarFragment", "Contenuto della lista: ${AnnoList.joinToString()}")
         AnnoSpinner.onItemSelectedListener = createItemSelectedListener( AnnoList,"Anno")
-       // ModelloSpinner.onItemSelectedListener = createItemSelectedListener( ModelloList, "Modello")
-
 
         btn.setOnClickListener {
-           // if (selectedType.isBlank() || selectedAnno.isBlank() || selectedMark.isBlank() || selectedModel.isBlank()) {
-             //   Toast.makeText(requireContext(), "inserire tutti i parametri", Toast.LENGTH_LONG) .show()
-         //   } else {
-                fetchData(selectedType, selectedAnno, selectedMark, selectedModel, outRes)
-       //     }
-
+             if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition ==0 || AnnoSpinner.selectedItemPosition ==0) {
+                 Toast.makeText(requireContext(), "Seleziona  un parametro valido per ogni sezione", Toast.LENGTH_LONG).show()
+             } else {
+                 fetchData(selectedType, selectedAnno, selectedMark, selectedModel, outRes)
+             }
 
         }
 
 
+
     }
 
-    private fun populateSpinner(item: String, spinner: Spinner, lista: MutableList<String>?) {
 
 
-        val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
+    private  suspend fun populateSpinner(item: String, spinner: Spinner, lista: MutableList<String>) {
 
-        GlobalScope.launch(Dispatchers.IO) {
+        var scritta=""
+        when (item) {
+            "years" -> scritta = "Anno"
+            "types" -> scritta = "Tipo"
+            "makes" -> scritta = "Marchio"
+
+
+        }
+        if (lista.isEmpty()) {
+
+            lista.add(0,"Seleziona un $scritta")
+            val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
+
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder()
@@ -132,24 +120,27 @@ class AddingCarFragment : Fragment() {
                     .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
                     .build()
 
-                val response = client.newCall(request).execute()
+                val response = withContext(Dispatchers.IO) {
+                    client.newCall(request).execute()
+                }
 
                 if (response.isSuccessful) {
-                    val jsonResponse = response.body?.string() // Leggi il corpo della risposta solo una volta
-                    val jsonArray = jsonResponse?.removeSurrounding("[", "]")?.split(",")?.toTypedArray()
-                    jsonArray?.let { lista!!.addAll(it) }
+                    val responseBody = response.body?.string()
+                    val responseArray = responseBody
+                        ?.removeSurrounding("[", "]")
+                        ?.replace("\"", "")
+                        ?.split(",")
+                        ?.toTypedArray()
+                    responseArray?.let { lista.addAll(it) }
+
                     withContext(Dispatchers.Main) {
-                        if (jsonArray != null && jsonArray.isNotEmpty()) {
-                            val adapter = ArrayAdapter(
-                                requireContext(),
-                                android.R.layout.simple_spinner_item,
-                                jsonArray
-                            )
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinner.adapter = adapter
-                        } else {
-                            Log.e("AddingCarFragment", "La lista passata allo Spinner è vuota")
-                        }
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            lista
+                        )
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spinner.adapter = adapter
                     }
                 } else {
                     throw IOException("Errore nella richiesta: ${response.code}")
@@ -157,9 +148,16 @@ class AddingCarFragment : Fragment() {
             } catch (e: IOException) {
                 Log.e("AddingCarFragment", "Errore di connessione: ${e.message}")
             }
-
-            // Aggiungi un ritardo di 1 secondo prima di fare la prossima richiesta
-            delay(2500000) // Ritardo di 1 secondo (1000 millisecondi)
+        } else {
+            withContext(Dispatchers.Main) {
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    lista
+                )
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = adapter
+            }
         }
     }
 
@@ -178,7 +176,7 @@ class AddingCarFragment : Fragment() {
                 // Verifica se l'array non è vuoto e se la posizione è valida
                 if (ListaPassata.isNotEmpty() && position >= 0 && position < ListaPassata.size) {
                     // Ottieni l'opzione selezionata
-                    Log.e("AddingCarFragment","$ListaPassata" )
+                    Log.e("AddingCarFragment","CICICO $ListaPassata" )
                     val selectedOption = ListaPassata[position]
                     Log.d("AddingCarFragment", "Elemento selezionato12345: $selectedOption")
                     when (MessaggioPerMancatoInserimento) {
@@ -202,86 +200,10 @@ class AddingCarFragment : Fragment() {
     }
 
 
-    /*
-
-
-        var inAnno = view.findViewById<EditText>(R.id.Anno)
-        var inMarca = view.findViewById<EditText>(R.id.Marchio)
-        var inTipo = view.findViewById<EditText>(R.id.Tipo)
-        var btn = view.findViewById<Button>(R.id.btnAdd)
-        var outRes = view.findViewById<TextView>(R.id.result)
 
 
 
-        btn.setOnClickListener {
 
-            val marca = inMarca.text.toString()
-            val anno = inAnno.text.toString()
-            val tipo = inTipo.text.toString()
-
-            if (marca.isBlank() || anno.isBlank() || tipo.isBlank()) {
-                Toast.makeText(requireContext(), "inserire tutti i parametri", Toast.LENGTH_LONG)
-                    .show()
-
-            } else {
-                // Crea una stringa concatenando i testi degli EditText
-                //val concatenatedText = "$marca $anno $tipo 1"
-               // outRes.text = concatenatedText
-                fetchData(tipo, anno, marca, outRes)
-
-            }
-
-        }
-        */
-
-
-  /*  private fun richiamaListaAnni() {
-
-
-        val requestUrl = "https://car-data.p.rapidapi.com/cars/years"
-
-        // Esegui la chiamata API in un thread separato utilizzando coroutine
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val client = OkHttpClient()
-                val request = Request.Builder()
-                    .url(requestUrl)
-                    .get()
-                    .addHeader(
-                        "X-RapidAPI-Key",
-                        "3d2a9c66e1msh98394268003597ep10489bjsn42dc7dfe3373"
-                    )
-                    .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
-                    .build()
-
-                val response = client.newCall(request).execute()
-
-                // Accedi al thread UI per aggiornare il TextView con la risposta
-
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        val jsonResponse = response.body!!.string()
-
-                        // Rimuovi i caratteri '[' e ']' per ottenere solo il contenuto dell'array JSON
-                        val jsonArrayString = jsonResponse.removeSurrounding("[", "]")
-
-                        // Dividi la stringa JSON in un array di stringhe
-                        val jsonArray = jsonArrayString.split(",").toTypedArray()
-
-
-                    } else {
-                        // testo.text = "Errore nella richiesta: ${response.code}"
-                    }
-                }
-            } catch (e: IOException) {
-                // Accedi al thread UI per gestire l'eccezione di connessione
-                withContext(Dispatchers.Main) {
-                    // testo.text = "Errore di connessione: ${e.message}"
-                }
-            }
-        }
-    }
-    */
 
     private fun fetchData(
         tipo: String?,
@@ -292,11 +214,11 @@ class AddingCarFragment : Fragment() {
     ) {
         //Log.d("fetchData", "Il valore di anno è: $anno")
         // Il resto del tuo codice per effettuare la chiamata di rete e gestire la risposta
-       //  val requestUrl = "https://car-data.p.rapidapi.com/cars?limit=1&page=0&year=$anno&make=$marca&type=$tipo&model=$modello"
+        //  val requestUrl = "https://car-data.p.rapidapi.com/cars?limit=1&page=0&year=$anno&make=$marca&type=$tipo&model=$modello"
         val requestUrl = "https://car-data.p.rapidapi.com/cars?limit=1&page=0&year=$anno&make=$marca&type=$tipo"
 
         // Esegui la chiamata API in un thread separato utilizzando coroutine
-        println(anno)
+
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
@@ -317,7 +239,7 @@ class AddingCarFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         testo.text = response.body?.string()
-                        println(response.headers("Content-Type"))
+
 
                     } else {
                         testo.text = "Errore nella richiesta: ${response.code}"
