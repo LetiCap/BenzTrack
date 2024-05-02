@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,13 +29,15 @@ class AddingCarFragment : Fragment() {
     private var selectedModel: String = ""
     private var selectedAnno: String = ""
     private var selectedType: String = ""
-    private var selectedMark: String = ""
+    private var selectedMakes: String = ""
+    private var selectedCar: String = ""
+
 
     private var AnnoList: MutableList<String> = mutableListOf()
-
     private var MarchioList: MutableList<String> = mutableListOf()
     private var ModelloList: MutableList<String> = mutableListOf()
     private var TipoList: MutableList<String> = mutableListOf()
+    private var CarList: MutableList<String> = mutableListOf()
 
 
     override fun onCreateView(
@@ -50,19 +53,20 @@ class AddingCarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val ModelloSpinner: Spinner = view.findViewById(R.id.Modello)
+        val outResSpinner:Spinner = view.findViewById(R.id.result)
         val TipoSpinner: Spinner = view.findViewById(R.id.Tipo)
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
         val btn = view.findViewById<Button>(R.id.btnAdd)
-        val outRes = view.findViewById<TextView>(R.id.result)
+
+
 
 
         lifecycleScope.launch {
             populateSpinner("makes", MarchioSpinner, MarchioList)
-          //  delay(100)
+            delay(100)
             populateSpinner("years", AnnoSpinner, AnnoList)
-          //  delay(100)
+            delay(100)
             populateSpinner("types",TipoSpinner,TipoList)
         }
 
@@ -79,11 +83,11 @@ class AddingCarFragment : Fragment() {
 
 
         btn.setOnClickListener {
-             if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition ==0 || AnnoSpinner.selectedItemPosition ==0) {
-                 Toast.makeText(requireContext(), "Seleziona  un parametro valido per ogni sezione", Toast.LENGTH_LONG).show()
-             } else {
-                 fetchData(selectedType, selectedAnno, selectedMark, selectedModel, outRes)
-             }
+           //  if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition ==0 || AnnoSpinner.selectedItemPosition ==0) {
+         //        Toast.makeText(requireContext(), "Seleziona  un parametro valido per ogni sezione", Toast.LENGTH_LONG).show()
+         //    } else {
+                 fetchData(selectedType, selectedAnno, selectedMakes,CarList,outResSpinner )
+          //   }
 
         }
 
@@ -165,10 +169,11 @@ class AddingCarFragment : Fragment() {
                     val selectedOption = ListaPassata[position]
                     Log.d("AddingCarFragment", "Elemento selezionato12345: $selectedOption")
                     when (MessaggioPerMancatoInserimento) {
-                        "Modello" -> selectedModel = selectedOption
+
                         "Tipo" -> selectedType = selectedOption
                         "Anno" -> selectedAnno = selectedOption
-                        "Marchio" -> selectedMark = selectedOption
+                        "Marchio" -> selectedMakes = selectedOption
+                        "Macchina" -> selectedCar = selectedOption
 
                     }
                     Log.d("AddingCarFragment", "Elemento selezionato: $selectedOption")
@@ -194,8 +199,10 @@ class AddingCarFragment : Fragment() {
         tipo: String?,
         anno: String?,
         marca: String?,
-        modello: String?,
-        testo: TextView
+        ListaMacchina:MutableList<String>,
+        spinnerMacchine:Spinner
+
+
     ) {
         //Log.d("fetchData", "Il valore di anno è: $anno")
         // Il resto del tuo codice per effettuare la chiamata di rete e gestire la risposta
@@ -223,17 +230,38 @@ class AddingCarFragment : Fragment() {
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        testo.text = response.body?.string()
+                        spinnerMacchine.visibility = View.VISIBLE
+                        val responseBody = response.body?.string()
+                        val responseArray = responseBody
+                            ?.removeSurrounding("[", "]")
+                           ?.replace("\"", "")
+                            ?.replace("{", "")
+                            ?.replace("}", "")
+                            ?.split("]")
+                            ?.toTypedArray()
+                        responseArray?.let { ListaMacchina.addAll(it) }
+
+                        withContext(Dispatchers.Main) {
+                            val adapter = ArrayAdapter(
+                                requireContext(),
+                                android.R.layout.simple_spinner_item,
+                                ListaMacchina
+                            )
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            spinnerMacchine.adapter = adapter
 
 
+                        }
+                        spinnerMacchine.onItemSelectedListener = createItemSelectedListener( ListaMacchina,"Macchina")
                     } else {
-                        testo.text = "Errore nella richiesta: ${response.code}"
+                        throw IOException("Errore nella richiesta: ${response.code}")
                     }
                 }
             } catch (e: IOException) {
                 // Accedi al thread UI per gestire l'eccezione di connessione
                 withContext(Dispatchers.Main) {
-                    testo.text = "Errore di connessione: ${e.message}"
+                    Toast.makeText(requireContext(), "Errore di connessione", Toast.LENGTH_LONG).show()
+
                 }
             }
         }
