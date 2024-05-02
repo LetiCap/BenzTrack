@@ -73,10 +73,10 @@ class AddingCarFragment : Fragment() {
 
         MarchioSpinner.onItemSelectedListener = createItemSelectedListener( MarchioList,"Marchio")
         TipoSpinner.onItemSelectedListener = createItemSelectedListener(TipoList,"Tipo")
-
         //ModelloSpinner.onItemSelectedListener = createItemSelectedListener( ModelloList, "Modello")
-
         AnnoSpinner.onItemSelectedListener = createItemSelectedListener( AnnoList,"Anno")
+
+
 
         btn.setOnClickListener {
              if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition ==0 || AnnoSpinner.selectedItemPosition ==0) {
@@ -100,54 +100,49 @@ class AddingCarFragment : Fragment() {
             "years" -> scritta = "Anno"
             "types" -> scritta = "Tipo"
             "makes" -> scritta = "Marchio"
-
-
         }
+        lista.add(0,"Seleziona un $scritta")
+        val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
 
-
-            lista.add(0,"Seleziona un $scritta")
-            val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
-
-            try {
-                val client = OkHttpClient()
-                val request = Request.Builder()
-                    .url(requestUrl)
-                    .get()
-                    .addHeader(
-                        "X-RapidAPI-Key",
-                        "3d2a9c66e1msh98394268003597ep10489bjsn42dc7dfe3373"
-                    )
-                    .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
-                    .build()
-
-                val response = withContext(Dispatchers.IO) {
-                    client.newCall(request).execute()
-                }
-
-                if (response.isSuccessful) {
-                    val responseBody = response.body?.string()
-                    val responseArray = responseBody
-                        ?.removeSurrounding("[", "]")
-                        ?.replace("\"", "")
-                        ?.split(",")
-                        ?.toTypedArray()
-                    responseArray?.let { lista.addAll(it) }
-
-                    withContext(Dispatchers.Main) {
-                        val adapter = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            lista
-                        )
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        spinner.adapter = adapter
-                    }
-                } else {
-                    throw IOException("Errore nella richiesta: ${response.code}")
-                }
-            } catch (e: IOException) {
-                Log.e("AddingCarFragment", "Errore di connessione: ${e.message}")
+        try {
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                .url(requestUrl)
+                .get()
+                .addHeader(
+                    "X-RapidAPI-Key",
+                    "3d2a9c66e1msh98394268003597ep10489bjsn42dc7dfe3373"
+                )
+                .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
+                .build()
+            val response = withContext(Dispatchers.IO) {
+                client.newCall(request).execute()
             }
+
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                val responseArray = responseBody
+                    ?.removeSurrounding("[", "]")
+                    ?.replace("\"", "")
+                    ?.split(",")
+                    ?.toTypedArray()
+                responseArray?.let { lista.addAll(it) }
+
+                withContext(Dispatchers.Main) {
+                    val adapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        lista
+                    )
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinner.adapter = adapter
+                }
+            } else {
+                throw IOException("Errore nella richiesta: ${response.code}")
+            }
+        } catch (e: IOException) {
+            Log.e("AddingCarFragment", "Errore di connessione: ${e.message}")
+        }
 
     }
 
