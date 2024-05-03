@@ -37,7 +37,6 @@
 
         <activity
             android:name=".FuelMaps"
-            android:label="fuelMap"
             android:exported="false">
         </activity>
     </application>

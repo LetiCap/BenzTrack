@@ -21,6 +21,6 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="100dp"
         android:visibility="visible"
-        tools:context=".Fuel" />
+        />
 
 </FrameLayout>
