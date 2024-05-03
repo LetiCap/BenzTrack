@@ -1,5 +1,6 @@
 package com.example.benztrack
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -31,10 +32,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.add_fuel ->{
                     replaceFragment(Fuel())
+
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.bollo -> {
                     replaceFragment(AddBollo())
+
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.assicurazione ->{
@@ -47,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
         // Visualizza il frammento iniziale
         replaceFragment(HomeFragment())
+
+
     }
 
     // Funzione per sostituire il frammento nel contenitore del frammento

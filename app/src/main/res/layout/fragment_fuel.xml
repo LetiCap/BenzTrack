@@ -14,4 +14,13 @@
         android:textColor="@color/colorLightBlue"
         android:textSize="18sp" />
 
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/fuelMap"
+        android:layout_width="match_parent"
+        android:layout_height="244dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="100dp"
+        android:visibility="visible"
+        tools:context=".Fuel" />
+
 </FrameLayout>

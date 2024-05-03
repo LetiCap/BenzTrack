@@ -1,5 +1,6 @@
 package com.example.benztrack
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,9 @@ class Fuel : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Puoi inizializzare le tue view e gestire le interazioni UI qui
+
+        val intent = Intent(requireContext(), FuelMaps::class.java)
+        startActivity(intent)
+
     }
 }
