@@ -82,11 +82,11 @@ class AddingCarFragment : Fragment() {
 
 
         btn.setOnClickListener {
-           //  if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition ==0 || AnnoSpinner.selectedItemPosition ==0) {
-         //        Toast.makeText(requireContext(), "Seleziona  un parametro valido per ogni sezione", Toast.LENGTH_LONG).show()
-         //    } else {
+            if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition ==0 || AnnoSpinner.selectedItemPosition ==0) {
+                Toast.makeText(requireContext(), "Seleziona  un parametro valido per ogni sezione", Toast.LENGTH_LONG).show()
+             } else {
                  fetchData(selectedType, selectedAnno, selectedMakes,CarList,outResSpinner )
-          //   }
+            }
 
         }
 
