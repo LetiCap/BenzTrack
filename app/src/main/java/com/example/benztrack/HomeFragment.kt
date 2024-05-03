@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
         vehicleSpinner.adapter = adapter
 
         //valore iniziale
-        vehicleSpinner.setSelection(0)
+        //vehicleSpinner.setSelection(0)
 
         // Gestione dell'evento di selezione dello Spinner
         vehicleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
