@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
         val vehicleSpinner: Spinner = view.findViewById(R.id.veichleSpinner)
 
         // Lista di veicoli
-        val vehicleList = listOf("Auto", "Moto", "Bicicletta")
+        val vehicleList = listOf("Auto", "Auto2", "Auto3")
 
         // Creazione dell'adapter
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, vehicleList)
@@ -37,18 +37,23 @@ class HomeFragment : Fragment() {
         vehicleSpinner.adapter = adapter
 
         //valore iniziale
-        //vehicleSpinner.setSelection(0)
+        //vehicleList.add(0,"Seleziona un veicolo")
 
         // Gestione dell'evento di selezione dello Spinner
         vehicleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
                 // Azioni da eseguire quando un elemento viene selezionato
+
                 val selectedVehicle = parent?.getItemAtPosition(position).toString()
+
                 // Esempio di azione: visualizzare il veicolo selezionato
-                Toast.makeText(requireContext(), "Veicolo selezionato: $selectedVehicle", Toast.LENGTH_SHORT).show()
+
+               // Toast.makeText(requireContext(), "Veicolo selezionato: $selectedVehicle", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
+
                 // Azioni da eseguire quando nessun elemento è selezionato
             }
         }
