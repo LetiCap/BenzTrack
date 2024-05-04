@@ -1,19 +1,15 @@
-package com.example.benztrack
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.benztrack.CarExpandableListAdapter
+import com.example.benztrack.R
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,18 +18,17 @@ import okhttp3.Request
 import java.io.IOException
 
 class AddingCarFragment : Fragment() {
-    private var selectedModel: String = ""
     private var selectedAnno: String = ""
     private var selectedType: String = ""
     private var selectedMakes: String = ""
-    private var selectedCar: String = ""
     private var userClickedSpinner: Boolean = false
 
     private var AnnoList: MutableList<String> = mutableListOf()
     private var MarchioList: MutableList<String> = mutableListOf()
-    private var ModelloList: MutableList<String> = mutableListOf()
     private var TipoList: MutableList<String> = mutableListOf()
-    private var CarList: MutableList<String> = mutableListOf()
+
+    private lateinit var expandableListView: ExpandableListView
+    private lateinit var carExpandableListAdapter: CarExpandableListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,12 +38,14 @@ class AddingCarFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
-        val outResSpinner: Spinner = view.findViewById(R.id.result)
         val TipoSpinner: Spinner = view.findViewById(R.id.Tipo)
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
         val btn = view.findViewById<Button>(R.id.btnAdd)
+        expandableListView = view.findViewById(R.id.expandableListView)
+        expandableListView.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
 
         lifecycleScope.launch {
             populateSpinner("makes", MarchioSpinner, MarchioList)
@@ -75,7 +72,7 @@ class AddingCarFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                fetchData(selectedType, selectedAnno, selectedMakes, CarList, outResSpinner)
+                fetchData(selectedType, selectedAnno, selectedMakes)
             }
         }
     }
@@ -158,10 +155,6 @@ class AddingCarFragment : Fragment() {
                             selectedMakes = selectedOption
                             Log.d("AddingCarFragment", "Marchio selezionato: $selectedOption")
                         }
-                        "Macchina" -> {
-                            selectedCar = selectedOption
-                            Log.d("AddingCarFragment", "Macchina selezionata: $selectedOption")
-                        }
                     }
                     userClickedSpinner = true
                 } else {
@@ -177,12 +170,11 @@ class AddingCarFragment : Fragment() {
         tipo: String?,
         anno: String?,
         marca: String?,
-        ListaMacchina: MutableList<String>,
-        spinnerMacchine: Spinner
     ) {
-        val requestUrl = "https://car-data.p.rapidapi.com/cars?limit=1&page=0&year=$anno&make=$marca&type=$tipo"
+        val requestUrl =
+            "https://car-data.p.rapidapi.com/cars?limit=50&page=0&year=$anno&make=$marca&type=$tipo"
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder()
@@ -195,44 +187,64 @@ class AddingCarFragment : Fragment() {
                     .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
                     .build()
 
-                val response = client.newCall(request).execute()
+                val response = withContext(Dispatchers.IO) {
+                    client.newCall(request).execute()
+                }
 
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        spinnerMacchine.visibility = View.VISIBLE
-                        val responseBody = response.body?.string()
-                        val responseArray = responseBody
-                            ?.removeSurrounding("[", "]")
-                            ?.replace("\"", "")
-                            ?.replace("{", "")
-                            ?.replace("}", "")
-                            ?.split("]")
-                            ?.toTypedArray()
-                        responseArray?.let { ListaMacchina.addAll(it) }
-
-                        val adapter = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            ListaMacchina
-                        )
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        spinnerMacchine.adapter = adapter
-
-                        if (ListaMacchina.isNotEmpty()) {
-                            spinnerMacchine.setSelection(0)
-                        }
-
-                        spinnerMacchine.onItemSelectedListener =
-                            createItemSelectedListener(ListaMacchina, "Macchina")
-                    } else {
-                        throw IOException("Errore nella richiesta: ${response.code}")
-                    }
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    Log.d("AddingCarFragment", "Risposta grezza dall'API: $responseBody")
+                    val carData = parseResponse(responseBody)
+                    updateListView(carData)
+                } else {
+                    throw IOException("Errore nella richiesta: ${response.code}")
                 }
             } catch (e: IOException) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Errore di connessione", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Errore di connessione", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
+        }
+    }
+
+    private fun parseResponse(responseBody: String?): MutableList<Pair<String, MutableList<Pair<String, String>>>> {
+        val carList = mutableListOf<Pair<String, MutableList<Pair<String, String>>>>()
+
+        responseBody?.let {
+            val vehicles = it.removeSurrounding("[", "]").split("},")
+            vehicles.forEach { vehicle ->
+                val vehicleDetails = vehicle.split(",")
+                val vehicleId = vehicleDetails.find { it.startsWith("id:") }?.substringAfter("id:\"")?.trim(' ', '"') ?: ""
+                val vehicleModel = vehicleDetails.find { it.startsWith("model:") }?.substringAfter("model:\"")?.trim(' ', '"') ?: ""
+                val vehicleType = vehicleDetails.find { it.startsWith("type:") }?.substringAfter("type:\"")?.trim(' ', '"') ?: ""
+                val vehicleMake = vehicleDetails.find { it.startsWith("make:") }?.substringAfter("make:\"")?.trim(' ', '"') ?: ""
+                val vehicleYear = vehicleDetails.find { it.startsWith("year:") }?.substringAfter("year:\"")?.trim(' ', '"') ?: ""
+
+                val details = mutableListOf<Pair<String, String>>()
+                details.add(Pair("model", vehicleModel))
+                details.add(Pair("type", vehicleType))
+                details.add(Pair("year", vehicleYear))
+                details.add(Pair("make", vehicleMake))
+
+                carList.add(Pair(vehicleId, details))
+            }
+        }
+
+        return carList
+    }
+
+
+    private fun updateListView(carData: MutableList<Pair<String, MutableList<Pair<String, String>>>>) {
+        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), carData)
+        expandableListView.setAdapter(carExpandableListAdapter)
+        expandableListView.visibility = View.VISIBLE
+
+        expandableListView.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
+            val vehicleDetails = carData[groupPosition].second[childPosition]
+            val message = "Dettagli del veicolo:\nModello: ${vehicleDetails.first}\nTipo: ${vehicleDetails.second}"
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+            true
         }
     }
 }
