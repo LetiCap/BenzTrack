@@ -14,13 +14,32 @@
         android:textColor="@color/colorLightBlue"
         android:textSize="18sp" />
 
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/fuelMap"
         android:layout_width="match_parent"
-        android:layout_height="244dp"
+        android:layout_height="224dp"
         android:layout_gravity="top"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="0dp"
 
-        android:visibility="visible" />
+        android:visibility="visible">
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/zoomMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/currentPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" />
+
+    </com.google.android.gms.maps.MapView>
+
+
+
 
 </FrameLayout>
