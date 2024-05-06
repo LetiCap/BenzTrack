@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.benztrack.R
 
@@ -18,7 +19,7 @@ class CarExpandableListAdapter(
     }
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return false // Indica che gli elementi figli non sono selezionabili
+        return true // Indica che gli elementi figli non sono selezionabili
     }
 
     override fun hasStableIds(): Boolean {
@@ -62,19 +63,35 @@ class CarExpandableListAdapter(
         convertView: View?,
         parent: ViewGroup?
     ): View {
-        var convertViewChild = convertView
-        if (convertViewChild == null) {
+        var convertViewGroup = convertView
+        if (convertViewGroup == null) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertViewChild = inflater.inflate(R.layout.list_item_vehicle, null)
+            convertViewGroup = inflater.inflate(R.layout.list_item_vehicle, null)
         }
-        val textTitleView = convertViewChild!!.findViewById<TextView>(R.id.textTitle)
-        val textDetailsView = convertViewChild.findViewById<TextView>(R.id.textDetails)
+
         val details = vehicleDetails[groupPosition] // Otteniamo i dettagli corrispondenti al gruppo
         val detail = details[childPosition] // Otteniamo il dettaglio specifico per questo elemento
-        textTitleView.text = "${detail.first}: ${detail.second}" // Visualizziamo chiave e valore
-        textDetailsView.visibility = View.GONE // Nascondiamo il dettaglio aggiuntivo
-        return convertViewChild
+
+        // Se l'elemento è l'ID, non visualizzarlo
+        if (detail.first == "Id") {
+            convertViewGroup!!.visibility = View.GONE
+        } else {
+            // Se non è l'ID, visualizziamo normalmente i dettagli
+            val textTitleView = convertViewGroup!!.findViewById<TextView>(R.id.textTitle)
+            textTitleView.text = "${detail.first}: ${detail.second}" // Visualizziamo chiave e valore
+            convertViewGroup.visibility = View.VISIBLE
+
+            // Aggiungiamo il listener di clic al convertViewGroup
+            convertViewGroup.setOnClickListener {
+                // Otteniamo l'ID
+                val id = details.find { it.first == "Id" }?.second ?: "ID non disponibile"
+                // Mostriamo l'ID in un Toast
+                Toast.makeText(context, id, Toast.LENGTH_LONG).show()
+            }
+        }
+        return convertViewGroup
     }
+
 
 
 

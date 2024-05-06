@@ -88,6 +88,10 @@ class AddingCarFragment : Fragment() {
         }
 
         lista.add(0, "Seleziona un $scritta")
+
+
+
+
         val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
 
         try {
@@ -95,11 +99,7 @@ class AddingCarFragment : Fragment() {
             val request = Request.Builder()
                 .url(requestUrl)
                 .get()
-                .addHeader(
-                    "X-RapidAPI-Key",
-                    "3d2a9c66e1msh98394268003597ep10489bjsn42dc7dfe3373"
-                )
-                .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
+                .addHeader("X-RapidAPI-Key", "0dc8f0efbdmsha7a5bc2f50d8e7dp1a3ad3jsn088f99490027")
                 .build()
             val response = withContext(Dispatchers.IO) {
                 client.newCall(request).execute()
@@ -182,10 +182,7 @@ class AddingCarFragment : Fragment() {
                 val request = Request.Builder()
                     .url(requestUrl)
                     .get()
-                    .addHeader(
-                        "X-RapidAPI-Key",
-                        "3d2a9c66e1msh98394268003597ep10489bjsn42dc7dfe3373"
-                    )
+                    .addHeader("X-RapidAPI-Key", "0dc8f0efbdmsha7a5bc2f50d8e7dp1a3ad3jsn088f99490027")
                     .addHeader("X-RapidAPI-Host", "car-data.p.rapidapi.com")
                     .build()
 
@@ -222,6 +219,7 @@ class AddingCarFragment : Fragment() {
             for (i in 0 until vehiclesJsonArray.length()) {
                 val vehicleJsonObject = vehiclesJsonArray.getJSONObject(i)
                 val details = mutableListOf<Pair<String, String>>()
+
                 details.add(Pair("Modello", vehicleJsonObject.getString("model")))
                 details.add(Pair("Tipo", vehicleJsonObject.getString("type")))
                 details.add(Pair("Anno", vehicleJsonObject.getString("year")))
