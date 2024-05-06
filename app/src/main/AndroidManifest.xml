@@ -36,10 +36,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".FuelMaps"
-            android:exported="false">
-        </activity>
+
     </application>
 
 </manifest>
