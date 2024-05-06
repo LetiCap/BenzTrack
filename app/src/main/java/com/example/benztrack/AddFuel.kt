@@ -49,18 +49,16 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        val initialLocation = LatLng(49.7128, -74.0060)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
+       // val initialLocation = LatLng(49.7128, -74.0060)
+       // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
 
-        // Inizializza il client per ottenere la posizione
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
-        // Ottieni la posizione attuale e aggiungi un marker sulla mappa
         // Inizializza il client per ottenere la posizione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         // Richiedi il permesso di accesso alla posizione
         requestLocationPermission()
+
+
     }
 
     // Funzione per richiedere il permesso di accesso alla posizione
@@ -103,7 +101,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                     MarkerOptions().position(currentPosition).title("La mia posizione attuale")
                 )
                 // Muovi la camera per centrare il marker
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 15f))
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 13f))
             }
         }
     }
