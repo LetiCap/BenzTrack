@@ -7,9 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!-- meta data per api google-->
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyBt5cHzHWDPNHZyaKuZ6ZPcsPCSQe__Ebk" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,10 +20,13 @@
 
         android:theme="@style/Base.Theme.BenzTrack"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBt5cHzHWDPNHZyaKuZ6ZPcsPCSQe__Ebk" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-
             android:exported="true">
 
             <intent-filter>

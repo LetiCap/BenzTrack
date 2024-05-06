@@ -48,6 +48,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:18.0.0")
 }
 
 
