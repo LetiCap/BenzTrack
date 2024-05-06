@@ -7,7 +7,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.benztrack.CarExpandableListAdapter
+
 import com.example.benztrack.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONArray
 import java.io.IOException
 
 class AddingCarFragment : Fragment() {
@@ -208,43 +209,34 @@ class AddingCarFragment : Fragment() {
         }
     }
 
-    private fun parseResponse(responseBody: String?): MutableList<Pair<String, MutableList<Pair<String, String>>>> {
-        val carList = mutableListOf<Pair<String, MutableList<Pair<String, String>>>>()
+    private fun parseResponse(responseBody: String?): List<List<Pair<String, String>>> {
+        val vehicleList = mutableListOf<List<Pair<String, String>>>()
 
         responseBody?.let {
-            val vehicles = it.removeSurrounding("[", "]").split("},")
-            vehicles.forEach { vehicle ->
-                val vehicleDetails = vehicle.split(",")
-                val vehicleId = vehicleDetails.find { it.startsWith("id:") }?.substringAfter("id:\"")?.trim(' ', '"') ?: ""
-                val vehicleModel = vehicleDetails.find { it.startsWith("model:") }?.substringAfter("model:\"")?.trim(' ', '"') ?: ""
-                val vehicleType = vehicleDetails.find { it.startsWith("type:") }?.substringAfter("type:\"")?.trim(' ', '"') ?: ""
-                val vehicleMake = vehicleDetails.find { it.startsWith("make:") }?.substringAfter("make:\"")?.trim(' ', '"') ?: ""
-                val vehicleYear = vehicleDetails.find { it.startsWith("year:") }?.substringAfter("year:\"")?.trim(' ', '"') ?: ""
-
+            val vehiclesJsonArray = JSONArray(it)
+            for (i in 0 until vehiclesJsonArray.length()) {
+                val vehicleJsonObject = vehiclesJsonArray.getJSONObject(i)
                 val details = mutableListOf<Pair<String, String>>()
-                details.add(Pair("model", vehicleModel))
-                details.add(Pair("type", vehicleType))
-                details.add(Pair("year", vehicleYear))
-                details.add(Pair("make", vehicleMake))
-
-                carList.add(Pair(vehicleId, details))
+                details.add(Pair("Modello", vehicleJsonObject.getString("model")))
+                details.add(Pair("Tipo", vehicleJsonObject.getString("type")))
+                details.add(Pair("Anno", vehicleJsonObject.getString("year")))
+                details.add(Pair("Marchio", vehicleJsonObject.getString("make")))
+                vehicleList.add(details)
             }
         }
 
-        return carList
+        return vehicleList
     }
 
+    private fun updateListView(vehicleDetailsList: List<List<Pair<String, String>>>) {
+        val vehicleDescriptions = vehicleDetailsList.mapIndexed { index, details ->
+            val description = StringBuilder("Veicolo ${index + 1}\n")
 
-    private fun updateListView(carData: MutableList<Pair<String, MutableList<Pair<String, String>>>>) {
-        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), carData)
+            description.toString()
+        }
+        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList)
         expandableListView.setAdapter(carExpandableListAdapter)
         expandableListView.visibility = View.VISIBLE
-
-        expandableListView.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
-            val vehicleDetails = carData[groupPosition].second[childPosition]
-            val message = "Dettagli del veicolo:\nModello: ${vehicleDetails.first}\nTipo: ${vehicleDetails.second}"
-            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-            true
-        }
     }
+
 }

@@ -1,24 +1,24 @@
-package com.example.benztrack
-
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import com.example.benztrack.R
 
 class CarExpandableListAdapter(
     private val context: Context,
-    private val carData: MutableList<Pair<String, MutableList<Pair<String, String>>>>
+    private val vehicleDescriptions: List<String>,
+    private val vehicleDetails: List<List<Pair<String, String>>>
 ) : BaseExpandableListAdapter() {
 
     override fun getGroup(groupPosition: Int): Any {
-        return carData[groupPosition].first
+        return vehicleDescriptions[groupPosition]
     }
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return true
+        return false // Indica che gli elementi figli non sono selezionabili
     }
 
     override fun hasStableIds(): Boolean {
@@ -37,13 +37,14 @@ class CarExpandableListAdapter(
             convertViewGroup = inflater.inflate(android.R.layout.simple_expandable_list_item_1, null)
         }
         val textView = convertViewGroup!!.findViewById<TextView>(android.R.id.text1)
-        textView.text = carData[groupPosition].first
-        textView.setTextColor(Color.BLACK) // Imposta il colore del testo a nero
+        textView.text = vehicleDescriptions[groupPosition]
+        textView.setTextColor(ContextCompat.getColor(context, android.R.color.white))
+        convertViewGroup.setBackgroundColor(ContextCompat.getColor(context, R.color.colorDutchWhite))
         return convertViewGroup
     }
 
     override fun getChild(groupPosition: Int, childPosition: Int): Any {
-        return carData[groupPosition].second[childPosition]
+        return vehicleDetails[groupPosition]
     }
 
     override fun getGroupId(groupPosition: Int): Long {
@@ -64,23 +65,24 @@ class CarExpandableListAdapter(
         var convertViewChild = convertView
         if (convertViewChild == null) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertViewChild = inflater.inflate(android.R.layout.simple_expandable_list_item_2, null)
+            convertViewChild = inflater.inflate(R.layout.list_item_vehicle, null)
         }
-        val item = getChild(groupPosition, childPosition) as Pair<String, String>
-        val textView1 = convertViewChild!!.findViewById<TextView>(android.R.id.text1)
-        val textView2 = convertViewChild.findViewById<TextView>(android.R.id.text2)
-        textView1.text = item.first
-        textView2.text = item.second
-        textView1.setTextColor(Color.BLACK) // Imposta il colore del testo a nero
-        textView2.setTextColor(Color.BLACK) // Imposta il colore del testo a nero
+        val textTitleView = convertViewChild!!.findViewById<TextView>(R.id.textTitle)
+        val textDetailsView = convertViewChild.findViewById<TextView>(R.id.textDetails)
+        val details = vehicleDetails[groupPosition] // Otteniamo i dettagli corrispondenti al gruppo
+        val detail = details[childPosition] // Otteniamo il dettaglio specifico per questo elemento
+        textTitleView.text = "${detail.first}: ${detail.second}" // Visualizziamo chiave e valore
+        textDetailsView.visibility = View.GONE // Nascondiamo il dettaglio aggiuntivo
         return convertViewChild
     }
 
+
+
     override fun getGroupCount(): Int {
-        return carData.size
+        return vehicleDescriptions.size
     }
 
     override fun getChildrenCount(groupPosition: Int): Int {
-        return carData[groupPosition].second.size
+        return vehicleDetails[groupPosition].size
     }
 }
