@@ -30,6 +30,7 @@ class AddingCarFragment : Fragment() {
 
     private lateinit var expandableListView: ExpandableListView
     private lateinit var carExpandableListAdapter: CarExpandableListAdapter
+    private lateinit var btnAdd: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,10 +42,10 @@ class AddingCarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        val TipoSpinner: Spinner = view.findViewById(R.id.Tipo)
+        val TipoSpinner:Spinner = view.findViewById(R.id.Tipo)
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
-        val btn = view.findViewById<Button>(R.id.btnAdd)
+        btnAdd = view.findViewById<Button>(R.id.btnAdd)
         expandableListView = view.findViewById(R.id.expandableListView)
         expandableListView.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
 
@@ -60,7 +61,7 @@ class AddingCarFragment : Fragment() {
         TipoSpinner.onItemSelectedListener = createItemSelectedListener(TipoList, "Tipo")
         AnnoSpinner.onItemSelectedListener = createItemSelectedListener(AnnoList, "Anno")
 
-        btn.setOnClickListener {
+        btnAdd.setOnClickListener {
             if (!userClickedSpinner) {
                 Toast.makeText(requireContext(), "Seleziona un anno", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -196,7 +197,11 @@ class AddingCarFragment : Fragment() {
                     val responseBody = response.body?.string()
                     Log.d("AddingCarFragment", "Risposta grezza dall'API: $responseBody")
                     val carData = parseResponse(responseBody)
-                    updateListView(carData)
+                    if (carData.isEmpty()){
+                        Toast.makeText(requireContext(), "niente è stato trovato", Toast.LENGTH_LONG)
+                            .show()
+                    }else{
+                    updateListView(carData)}
                 } else {
                     throw IOException("Errore nella richiesta: ${response.code}")
                 }
@@ -231,12 +236,13 @@ class AddingCarFragment : Fragment() {
     private fun updateListView(vehicleDetailsList: List<List<Pair<String, String>>>) {
         val vehicleDescriptions = vehicleDetailsList.mapIndexed { index, details ->
             val description = StringBuilder("Veicolo ${index + 1}\n")
-
             description.toString()
         }
         carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList)
         expandableListView.setAdapter(carExpandableListAdapter)
+        btnAdd.visibility = View.GONE
         expandableListView.visibility = View.VISIBLE
+
     }
 
 }
