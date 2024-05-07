@@ -1,5 +1,8 @@
 package com.example.benztrack
 
+import DatabaseApp
+import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
@@ -26,6 +30,10 @@ class HomeFragment : Fragment() {
         // Inizializzazione dello Spinner
         val vehicleSpinner: Spinner = view.findViewById(R.id.veichleSpinner)
 
+
+
+
+
         // Lista di veicoli
         val vehicleList = listOf("Auto", "Auto2", "Auto3")
 
@@ -36,24 +44,17 @@ class HomeFragment : Fragment() {
         // Collegamento dell'adapter allo Spinner
         vehicleSpinner.adapter = adapter
 
-        //valore iniziale
-        //vehicleList.add(0,"Seleziona un veicolo")
-
         // Gestione dell'evento di selezione dello Spinner
         vehicleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-
                 // Azioni da eseguire quando un elemento viene selezionato
-
                 val selectedVehicle = parent?.getItemAtPosition(position).toString()
 
                 // Esempio di azione: visualizzare il veicolo selezionato
-
-               // Toast.makeText(requireContext(), "Veicolo selezionato: $selectedVehicle", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Veicolo selezionato: $selectedVehicle", Toast.LENGTH_SHORT).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
                 // Azioni da eseguire quando nessun elemento è selezionato
             }
         }

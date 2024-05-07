@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         //cambio fragment a seconda del tasto selezionato
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -22,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.home -> {
                     replaceFragment(HomeFragment())
-
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.add_car -> {

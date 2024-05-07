@@ -78,7 +78,40 @@ class AddingCarFragment : Fragment() {
             }
         }
     }
+/*
+    val tv = view.findViewById<TextView>(R.id.text_home)
+    val tv1 = view.findViewById<TextView>(R.id.textView2)
+    val tv2 = view.findViewById<TextView>(R.id.textView)
 
+    // Inizializzazione del database
+    val database = DatabaseApp(requireContext())
+
+    // Recupera tutti i dati dalla tabella "TypesTable"
+    val datatype = database.getAllData("TypesTable")
+    val datamake = database.getAllData("MakesTable")
+    val datayear = database.getAllData("YearsTable")
+
+    // Costruisci una stringa con i dati ottenuti
+
+
+    var tabValue = ""
+    for (data in datatype) {
+        tabValue += "$data"
+    }
+    var tab = ""
+    for (data in datamake) {
+        tab += "$data"
+    }
+    var tabV = ""
+    for (data in datayear) {
+        tabV += "$data"
+    }
+
+    // Imposta la stringa nel TextView
+    tv.text = tabValue
+    tv1.text = tab
+    tv2.text = tabV
+    */
     private suspend fun populateSpinner(item: String, spinner: Spinner, lista: MutableList<String>) {
         var scritta = ""
         when (item) {
@@ -89,9 +122,15 @@ class AddingCarFragment : Fragment() {
 
         lista.add(0, "Seleziona un $scritta")
 
+        when (item) {
+            "years" -> lista.add(1, "2008")
+            "types" ->  lista.add(1, "Sedan")
+            "makes" ->  lista.add(1, "Buick")
+        }
 
 
 
+/*
         val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
 
         try {
@@ -113,7 +152,7 @@ class AddingCarFragment : Fragment() {
                     ?.split(",")
                     ?.toTypedArray()
                 responseArray?.let { lista.addAll(it) }
-
+*/
                 withContext(Dispatchers.Main) {
                     val adapter = ArrayAdapter(
                         requireContext(),
@@ -123,12 +162,12 @@ class AddingCarFragment : Fragment() {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinner.adapter = adapter
                 }
-            } else {
+     /*       } else {
                 throw IOException("Errore nella richiesta: ${response.code}")
             }
         } catch (e: IOException) {
             Log.e("AddingCarFragment", "Errore di connessione: ${e.message}")
-        }
+        }*/
     }
 
     private fun createItemSelectedListener(

@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="-10dp"
         android:text="Benvenuto nella schermata Home!"
         android:textColor="@color/colorLightBlue"
         android:textSize="18sp" />
@@ -25,6 +26,26 @@
         android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
         android:clickable="true" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="255dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text=""
+        android:textColor="@color/colorLightBlue"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="268dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="200dp"
+        android:text=""
+        android:textColor="@color/colorLightBlue"
+        android:textSize="18sp" />
 
 
 </FrameLayout>
