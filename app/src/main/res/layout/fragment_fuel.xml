@@ -1,45 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddFuel">
 
+
+
     <TextView
         android:id="@+id/text_fuel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="top|center"
         android:text="Benvenuto nella schermata Fuel!"
         android:textColor="@color/colorLightBlue"
         android:textSize="18sp" />
 
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/fuelMap"
         android:layout_width="match_parent"
-        android:layout_height="224dp"
-        android:layout_gravity="top"
+        android:layout_height="227dp"
+        android:layout_gravity="bottom"
         android:layout_marginBottom="0dp"
+        android:layout_weight="1"
+        android:visibility="visible" />
 
-        android:visibility="visible">
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/zoomMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/currentPosition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end" />
-
-    </com.google.android.gms.maps.MapView>
-
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/currentPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/baseline_gps_fixed_24"
+        android:layout_gravity="bottom|right|end"/>
 
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.example.benztrack
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class AddFuel : Fragment(), OnMapReadyCallback {
@@ -25,6 +27,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var rootView: View
 
     //codice per la richiesta del permesso
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
@@ -34,11 +37,37 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_fuel, container, false)
+        rootView= inflater.inflate(R.layout.fragment_fuel, container, false)
+
+
+        currentLocation(rootView)
 
         map(rootView, savedInstanceState)
 
+
         return rootView
+    }
+
+    private fun currentLocation(rootView: View) {
+
+        val currentPosition = rootView.findViewById<FloatingActionButton>(R.id.currentPosition)
+        currentPosition.setOnClickListener {
+            // Controlla se il permesso è stato già concesso
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                // Il permesso è già stato concesso, ottieni la posizione attuale
+                getCurrentLocation()
+            } else {
+                // Il permesso non è stato concesso, richiedilo all'utente
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
     }
 
     private fun map(rootView: View, savedInstanceState: Bundle?) {
@@ -49,16 +78,12 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-       // val initialLocation = LatLng(49.7128, -74.0060)
-       // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
 
         // Inizializza il client per ottenere la posizione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         // Richiedi il permesso di accesso alla posizione
         requestLocationPermission()
-
-
     }
 
     // Funzione per richiedere il permesso di accesso alla posizione
@@ -93,13 +118,19 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
             return
         }
+
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let {
+                val latitude = location.latitude
+                val longitude = location.longitude
+                saveLocationData(latitude, longitude)
+
                 // Aggiungi un marker sulla mappa nella posizione attuale
-                val currentPosition = LatLng(location.latitude, location.longitude)
+                val currentPosition = LatLng(latitude, longitude)
                 googleMap.addMarker(
                     MarkerOptions().position(currentPosition).title("La mia posizione attuale")
                 )
+
                 // Muovi la camera per centrare il marker
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 13f))
             }
@@ -119,6 +150,14 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 //toast per avviso permesso negato
             }
         }
+    }
+
+    private fun saveLocationData(latitude: Double, longitude: Double) {
+        val sharedPreferences = requireContext().getSharedPreferences("location_data", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putFloat("latitude", latitude.toFloat())
+        editor.putFloat("longitude", longitude.toFloat())
+        editor.apply()
     }
 
     override fun onResume() {
@@ -145,57 +184,5 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         super.onLowMemory()
         mapView.onLowMemory()
     }
+
 }
-
-
-/*
-class Fuel : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-
-    ): View? {
-        // Inflate the layout for this fragment
-
-        return inflater.inflate(R.layout.fragment_fuel, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val intent = Intent(requireContext(), FuelMaps::class.java)
-        startActivity(intent)
-
-    }
-}
-*/
-/*
-class Fuel : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fuel, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val intent = Intent(requireContext(), FuelMaps::class.java)
-        startActivityForResult(intent, REQUEST_CODE_FUEL_MAPS)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_FUEL_MAPS && resultCode == Activity.RESULT_OK) {
-            // Puoi gestire qui il risultato dell'attività di destinazione
-        }
-    }
-
-    companion object {
-        private const val REQUEST_CODE_FUEL_MAPS = 101
-    }
-}*/
