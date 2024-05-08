@@ -3,23 +3,21 @@
 
     <item android:id="@+id/home"
         android:title="Home"
-        android:icon="@drawable/baseline_home_24"/>
+        android:icon="@drawable/baseline_home_24"
+         />
 
     <item android:id="@+id/add_car"
         android:title="AddCar"
-        android:icon="@drawable/baseline_add_circle_24" />
+        android:icon="@drawable/baseline_add_circle_24"/>
 
 
     <item android:id="@+id/add_fuel"
-        android:title="Fuel"
-         />
+        android:title="Fuel" />
 
 
     <item android:id="@+id/bollo"
-        android:title="Bollo"
-        />
+        android:title="Bollo" />
 
     <item android:id="@+id/assicurazione"
-        android:title="Assicurazione"
-        android:icon="@drawable/baseline_app_settings_alt_24"/>
+        android:title="Assicurazione" />
 </menu>

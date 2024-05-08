@@ -20,6 +20,8 @@
         <item name="editTextStyle">@style/app_editTextStyle</item>
         <item name="spinnerStyle">@style/app_SpinnerStyle</item>
 
+        <item name="floatingActionButtonStyle">@style/app_FloatingButtonStyle</item>
+
 
 
 
@@ -61,6 +63,10 @@
         <item name="android:background">?attr/colorTertiaryContainer</item>
     </style>
 
+    <style name="app_FloatinButtonStyle_NoAction" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">?attr/colorSecondary</item>
+    </style>
+
 
 
 
@@ -87,6 +93,7 @@
 
         <item name="spinnerStyle">@style/app_SpinnerStyle</item>
 
+        <item name="floatingActionButtonStyle">@style/app_FloatingButtonStyle</item>
 
 
 
@@ -130,6 +137,10 @@
         <item name="android:textColor">?attr/colorSecondary</item>
         <item name="android:dropDownSelector">?attr/colorSecondary</item>
         <item name="android:background">?attr/colorTertiaryContainer</item>
+    </style>
+
+    <style name="app_FloatingButtonStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">?attr/colorSecondary</item>
     </style>
 
 
