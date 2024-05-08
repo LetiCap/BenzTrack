@@ -31,9 +31,9 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
 
     override fun onCreate(db: SQLiteDatabase) {
         try {
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_TYPES($COLUMN_TYPES TEXT PRIMARY KEY)")
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES TEXT PRIMARY KEY)")
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS TEXT PRIMARY KEY)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_TYPES($COLUMN_TYPES VARCHAR PRIMARY KEY)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES VARCHAR PRIMARY KEY)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS VARCHAR PRIMARY KEY)")
             insertInitialValues(COLUMN_TYPES,TABLE_TYPES,"types", db)
             insertInitialValues(COLUMN_MAKES,TABLE_MAKES,"makes", db)
             insertInitialValues(COLUMN_YEARS,TABLE_YEARS,"years", db)
@@ -77,10 +77,11 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
 
                 responseArray?.let {
                     for (data in responseArray) {
+                        Log.e("DatabaseApp", "Data prima di inserire: $data")
                         val values = ContentValues().apply {
                             put(colonna, data) // Utilizza il nome dell'elemento come nome della colonna
                         }
-                        Log.e("DatabaseAppCAZZ", "Data inserted e: $data")
+                        Log.e("DatabaseApp", "Data inserted : $data")
                         db.insertWithOnConflict(tabella, null, values, SQLiteDatabase.CONFLICT_IGNORE)
                     }
                 }
@@ -108,9 +109,9 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
             while (it.moveToNext()) {
                 val rowData = StringBuilder()
                 for (i in 0 until it.columnCount) {
-                    val columnName = it.getColumnName(i)
+                    //val columnName = it.getColumnName(i)
                     val columnValue = it.getString(i)
-                    rowData.append("$columnName: $columnValue, ")
+                    rowData.append(columnValue)
                 }
                 dataList.add(rowData.toString())
             }

@@ -50,11 +50,12 @@
         <ExpandableListView
             android:id="@+id/expandableListView"
             android:layout_width="match_parent"
-            android:layout_height="138dp"
+            android:layout_height="124dp"
             android:layout_marginLeft="50dp"
             android:layout_marginTop="55dp"
             android:layout_marginRight="50dp"
             android:clickable="true"
+
             android:minHeight="48dp" />
 
         <Button

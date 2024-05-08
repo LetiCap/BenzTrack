@@ -45,16 +45,17 @@ class AddingCarFragment : Fragment() {
         val TipoSpinner:Spinner = view.findViewById(R.id.Tipo)
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
+        val database = DatabaseApp(requireContext())
         btnAdd = view.findViewById<Button>(R.id.btnAdd)
         expandableListView = view.findViewById(R.id.expandableListView)
         expandableListView.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
 
         lifecycleScope.launch {
-            populateSpinner("makes", MarchioSpinner, MarchioList)
+            populateSpinner("makes", MarchioSpinner, MarchioList, database)
             delay(200)
-            populateSpinner("years", AnnoSpinner, AnnoList)
+            populateSpinner("years", AnnoSpinner, AnnoList,database)
             delay(200)
-            populateSpinner("types", TipoSpinner, TipoList)
+            populateSpinner("types", TipoSpinner, TipoList, database)
         }
 
         MarchioSpinner.onItemSelectedListener = createItemSelectedListener(MarchioList, "Marchio")
@@ -70,9 +71,7 @@ class AddingCarFragment : Fragment() {
             if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition == 0 || AnnoSpinner.selectedItemPosition == 0) {
                 Toast.makeText(
                     requireContext(),
-                    "Seleziona un parametro valido per ogni sezione",
-                    Toast.LENGTH_LONG
-                ).show()
+                    "Seleziona un parametro valido per ogni sezione", Toast.LENGTH_LONG).show()
             } else {
                 fetchData(selectedType, selectedAnno, selectedMakes)
             }
@@ -112,21 +111,27 @@ class AddingCarFragment : Fragment() {
     tv1.text = tab
     tv2.text = tabV
     */
-    private suspend fun populateSpinner(item: String, spinner: Spinner, lista: MutableList<String>) {
+
+    private suspend fun populateSpinner(item: String, spinner: Spinner, lista: MutableList<String>, database: DatabaseApp) {
         var scritta = ""
+        var tabella=""
         when (item) {
-            "years" -> scritta = "Anno"
-            "types" -> scritta = "Tipo"
-            "makes" -> scritta = "Marchio"
+            "years" -> { scritta = "Anno" ; tabella ="YearsTable" }
+            "types" -> {scritta = "Tipo"; tabella ="TypesTable" }
+            "makes" -> {scritta = "Marchio"; tabella ="MakesTable" }
         }
 
         lista.add(0, "Seleziona un $scritta")
 
-        when (item) {
+       /* when (item) {
             "years" -> lista.add(1, "2008")
             "types" ->  lista.add(1, "Sedan")
             "makes" ->  lista.add(1, "Buick")
-        }
+        }*/
+        val dataFromTable = database.getAllData(tabella)
+
+        // Aggiungi i dati alla lista
+        lista.addAll(dataFromTable)
 
 
 
@@ -214,6 +219,7 @@ class AddingCarFragment : Fragment() {
     ) {
         val requestUrl =
             "https://car-data.p.rapidapi.com/cars?limit=50&page=0&year=$anno&make=$marca&type=$tipo"
+
 
         lifecycleScope.launch {
             try {
