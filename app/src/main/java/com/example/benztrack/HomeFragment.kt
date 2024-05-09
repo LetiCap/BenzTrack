@@ -13,6 +13,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
@@ -29,27 +31,45 @@ class HomeFragment : Fragment() {
 
         // Inizializzazione dello Spinner
         val vehicleSpinner: Spinner = view.findViewById(R.id.veichleSpinner)
+        val database = DatabaseApp(requireContext())
 
-
+        populateVehicle( vehicleSpinner, database)
 
 
 
         // Lista di veicoli
-        val vehicleList = listOf("Auto", "Auto2", "Auto3")
+
 
         // Creazione dell'adapter
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, vehicleList)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        // Collegamento dell'adapter allo Spinner
-        vehicleSpinner.adapter = adapter
 
         // Gestione dell'evento di selezione dello Spinner
-        vehicleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+    }
+
+    private fun populateVehicle( spinner: Spinner,  database: DatabaseApp) {
+        var scritta = ""
+
+
+       val lista : MutableList<String> =  mutableListOf()
+        lista.add(0, "Seleziona un veicolo")
+        val dataFromTable = database.getAllData("CarsTable")
+
+        // Aggiungi i dati alla lista
+        lista.addAll(dataFromTable)
+
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            lista
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 // Azioni da eseguire quando un elemento viene selezionato
                 val selectedVehicle = parent?.getItemAtPosition(position).toString()
-
                 // Esempio di azione: visualizzare il veicolo selezionato
                 Toast.makeText(requireContext(), "Veicolo selezionato: $selectedVehicle", Toast.LENGTH_SHORT).show()
             }
@@ -58,5 +78,14 @@ class HomeFragment : Fragment() {
                 // Azioni da eseguire quando nessun elemento è selezionato
             }
         }
+
+
     }
+
+
+
+
+
+
+
 }
