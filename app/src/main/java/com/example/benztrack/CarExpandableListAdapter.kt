@@ -11,8 +11,10 @@ import com.example.benztrack.R
 class CarExpandableListAdapter(
     private val context: Context,
     private val vehicleDescriptions: List<String>,
-    private val vehicleDetails: List<List<Pair<String, String>>>
+    private val vehicleDetails: List<List<Pair<String, String>>>,
+    private val vehicleIds: List<Int>
 ) : BaseExpandableListAdapter() {
+    private val database: DatabaseApp = DatabaseApp(context)
 
     override fun getGroup(groupPosition: Int): Any {
         return vehicleDescriptions[groupPosition]
@@ -73,9 +75,7 @@ class CarExpandableListAdapter(
         val detail = details[childPosition] // Otteniamo il dettaglio specifico per questo elemento
 
         // Se l'elemento è l'ID, non visualizzarlo
-        if (detail.first == "Id") {
-            convertViewGroup!!.visibility = View.GONE
-        } else {
+
             // Se non è l'ID, visualizziamo normalmente i dettagli
             val textTitleView = convertViewGroup!!.findViewById<TextView>(R.id.textTitle)
             textTitleView.text = "${detail.first}: ${detail.second}" // Visualizziamo chiave e valore
@@ -84,11 +84,15 @@ class CarExpandableListAdapter(
             // Aggiungiamo il listener di clic al convertViewGroup
             convertViewGroup.setOnClickListener {
                 // Otteniamo l'ID
-                val id = details.find { it.first == "Id" }?.second ?: "ID non disponibile"
-                // Mostriamo l'ID in un Toast
-                Toast.makeText(context, id, Toast.LENGTH_LONG).show()
+                val id = vehicleIds[groupPosition]
+                database.insertCar(id)
+                val cazz=database.getAllData("CarsTable")
+                for (data in cazz) {
+                    println(data)
+                }// Mostriamo l'ID in un Toast
+
             }
-        }
+
         return convertViewGroup
     }
 

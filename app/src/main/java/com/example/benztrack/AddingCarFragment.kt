@@ -27,6 +27,7 @@ class AddingCarFragment : Fragment() {
     private var AnnoList: MutableList<String> = mutableListOf()
     private var MarchioList: MutableList<String> = mutableListOf()
     private var TipoList: MutableList<String> = mutableListOf()
+    private var vehicleIds: MutableList<Int> = mutableListOf()
 
     private lateinit var expandableListView: ExpandableListView
     private lateinit var carExpandableListAdapter: CarExpandableListAdapter
@@ -265,6 +266,11 @@ class AddingCarFragment : Fragment() {
                 val vehicleJsonObject = vehiclesJsonArray.getJSONObject(i)
                 val details = mutableListOf<Pair<String, String>>()
 
+                val id = vehicleJsonObject.getString("id")
+                // Ottieni l'ID del veicolo
+                vehicleIds.add(id.toInt())
+
+
                 details.add(Pair("Modello", vehicleJsonObject.getString("model")))
                 details.add(Pair("Tipo", vehicleJsonObject.getString("type")))
                 details.add(Pair("Anno", vehicleJsonObject.getString("year")))
@@ -281,7 +287,7 @@ class AddingCarFragment : Fragment() {
             val description = StringBuilder("Veicolo ${index + 1}\n")
             description.toString()
         }
-        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList)
+        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleIds)
         expandableListView.setAdapter(carExpandableListAdapter)
         btnAdd.visibility = View.GONE
         expandableListView.visibility = View.VISIBLE

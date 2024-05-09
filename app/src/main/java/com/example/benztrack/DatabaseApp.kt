@@ -21,19 +21,24 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
         private const val TABLE_TYPES = "TypesTable"
         private const val TABLE_MAKES = "MakesTable"
         private const val TABLE_YEARS = "YearsTable"
+        private const val TABLE_LISTOFCARS = "CarsTable"
 
         private const val COLUMN_TYPES = "types"
         private const val COLUMN_MAKES = "makes"
         private const val COLUMN_YEARS = "years"
+        private const val COLUMN_ID = "id"
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(db: SQLiteDatabase) {
         try {
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_TYPES($COLUMN_TYPES VARCHAR PRIMARY KEY)")
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES VARCHAR PRIMARY KEY)")
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS VARCHAR PRIMARY KEY)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_TYPES($COLUMN_TYPES TEXT PRIMARY KEY)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES TEXT PRIMARY KEY)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS TEXT PRIMARY KEY)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_ID INTEGER PRIMARY KEY)")
+
+
             insertInitialValues(COLUMN_TYPES,TABLE_TYPES,"types", db)
             insertInitialValues(COLUMN_MAKES,TABLE_MAKES,"makes", db)
             insertInitialValues(COLUMN_YEARS,TABLE_YEARS,"years", db)
@@ -99,6 +104,16 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
+
+
+    fun insertCar(id:Int){
+        val db= this.writableDatabase
+        val data= ContentValues()
+        data.put(COLUMN_ID, id)
+        db.insert(TABLE_LISTOFCARS, null, data)
+        db.close()
+
+    }
 
     fun getAllData(tableName: String): ArrayList<String> {
         val dataList = ArrayList<String>()
