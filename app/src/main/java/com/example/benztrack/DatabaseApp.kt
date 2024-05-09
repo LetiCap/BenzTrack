@@ -27,6 +27,12 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
         private const val COLUMN_MAKES = "makes"
         private const val COLUMN_YEARS = "years"
         private const val COLUMN_ID = "id"
+        private const val COLUMN_BOLLO = "bollo"
+        private const val COLUMN_ASSICURAZIONE = "assicurazione"
+        private const val COLUMN_BENZINA = "benzina"
+        private const val COLUMN_LAT = "latitudine"
+        private const val COLUMN_LON = "longitudine"
+        private const val COLUMN_KM = "KM"
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -37,6 +43,7 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES TEXT PRIMARY KEY)")
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS TEXT PRIMARY KEY)")
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_ID INTEGER PRIMARY KEY)")
+
 
 
             insertInitialValues(COLUMN_TYPES,TABLE_TYPES,"types", db)
@@ -113,6 +120,25 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
         db.insert(TABLE_LISTOFCARS, null, data)
         db.close()
 
+    }
+
+    fun createTableInfoVehicle(id:String ){
+        val db = this.writableDatabase
+        db.beginTransaction()
+        try {
+            db.execSQL("CREATE TABLE IF NOT EXISTS $id(" +
+                    "$COLUMN_BOLLO INTEGER, " +
+                    "$COLUMN_ASSICURAZIONE INTEGER, " +
+                    "$COLUMN_BENZINA INTEGER, " +
+                    "$COLUMN_KM INTEGER, " +
+                    "$COLUMN_LAT TEXT, " +
+                    "$COLUMN_LON TEXT)")
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("DatabaseApp", "Error creating table $id: ${e.message}")
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun getAllData(tableName: String): ArrayList<String> {

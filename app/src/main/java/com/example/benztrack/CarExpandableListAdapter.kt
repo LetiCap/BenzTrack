@@ -86,10 +86,7 @@ class CarExpandableListAdapter(
                 // Otteniamo l'ID
                 val id = vehicleIds[groupPosition]
                 database.insertCar(id)
-                val cazz=database.getAllData("CarsTable")
-                for (data in cazz) {
-                    println(data)
-                }// Mostriamo l'ID in un Toast
+                database.createTableInfoVehicle(id.toString())
 
             }
 
