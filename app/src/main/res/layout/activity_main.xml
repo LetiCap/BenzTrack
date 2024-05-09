@@ -29,7 +29,6 @@
         android:layout_marginTop="1dp"
         android:theme="@style/app_BottomNAvStyle"
         app:labelVisibilityMode="labeled"
-        app:itemIconTint="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

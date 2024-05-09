@@ -34,7 +34,7 @@
 
 
     <style name="app_BottomNAvStyle_NoAction" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
-
+        
 
     </style>
 
@@ -115,6 +115,7 @@
     <style name="app_ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Solid">
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="titleTextColor">?attr/colorOnPrimary</item>
+        <item name="iconTint">?attr/colorOnPrimary</item>
     </style>
 
 
@@ -142,7 +143,5 @@
     <style name="app_FloatingButtonStyle" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">?attr/colorSecondary</item>
     </style>
-
-
 
 </resources>
