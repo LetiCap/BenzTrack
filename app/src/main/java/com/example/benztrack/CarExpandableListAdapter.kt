@@ -87,7 +87,6 @@ class CarExpandableListAdapter(
                 val id = vehicleIds[groupPosition]
                 database.insertCar(id)
                 database.createTableInfoVehicle(id.toString())
-
             }
 
         return convertViewGroup

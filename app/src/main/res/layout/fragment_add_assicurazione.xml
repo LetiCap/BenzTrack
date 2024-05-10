@@ -5,13 +5,33 @@
     android:layout_height="match_parent"
     tools:context=".AddAssicurazione">
 
-    <TextView
-        android:id="@+id/text_assicurazione"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Benvenuto nella schermata Assicurazione!"
-        android:textColor="@color/colorLightBlue"
-        android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/CostoAssicurazione"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="100dp"
+            android:hint="Write Assicurazione cost..."
+            android:ems="10"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/AddAssurance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginBottom="100dp"
+            android:text="Add" />
+
+    </LinearLayout>
 
 </FrameLayout>

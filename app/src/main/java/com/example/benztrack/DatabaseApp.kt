@@ -8,12 +8,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 
-class DatabaseApp(context: Context) : SQLiteOpenHelper(
-    context,
-    DATABASE_NAME,
-    null,
-    DATABASE_VERSION
-) {
+class DatabaseApp(val context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "DBExample"
@@ -122,29 +118,39 @@ class DatabaseApp(context: Context) : SQLiteOpenHelper(
 
     }
 
+    fun insertValueforCar(id:Int, column:String, table:String , value:Int){
+        val db = this.writableDatabase
+        val data = ContentValues()
+        data.put(column, value)
+        val tableName = "\"$table\""  // Aggiungi virgolette al nome della tabella
+        db.insert(tableName, null, data)
+        db.close()
+
+    }
+
     fun createTableInfoVehicle(id:String ){
         val db = this.writableDatabase
-        db.beginTransaction()
+
         try {
-            db.execSQL("CREATE TABLE IF NOT EXISTS $id(" +
+            db.execSQL("CREATE TABLE IF NOT EXISTS \"$id\" (" +
                     "$COLUMN_BOLLO INTEGER, " +
                     "$COLUMN_ASSICURAZIONE INTEGER, " +
                     "$COLUMN_BENZINA INTEGER, " +
                     "$COLUMN_KM INTEGER, " +
                     "$COLUMN_LAT TEXT, " +
                     "$COLUMN_LON TEXT)")
-            db.setTransactionSuccessful()
+
         } catch (e: Exception) {
             Log.e("DatabaseApp", "Error creating table $id: ${e.message}")
         } finally {
-            db.endTransaction()
+            db.close()
         }
     }
 
     fun getAllData(tableName: String): ArrayList<String> {
         val dataList = ArrayList<String>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $tableName", null)
+        val cursor = db.rawQuery("SELECT * FROM \"$tableName\"", null)
 
         cursor.use {
             while (it.moveToNext()) {
