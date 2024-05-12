@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/home"
-        android:title="Home"
-        android:enabled="true"
-        android:icon="@drawable/baseline_home_24" />
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Home"/>
 
     <item android:id="@+id/add_car"
-        android:title="AddCar"
-        android:enabled="true"
-        android:icon="@drawable/baseline_add_circle_24"/>
+        android:icon="@drawable/baseline_add_circle_24"
+        android:title="AddCar" />
 
 
     <item android:id="@+id/add_fuel"
-        android:title="Fuel"
-        android:enabled="true"
-        android:icon="@drawable/local_gas_station_24"/>
-
+        android:icon="@drawable/local_gas_station_24"
+        android:title="Fuel"/>
 
     <item android:id="@+id/bollo"
-        android:title="Bollo"
-        android:enabled="true"
-        android:icon="@drawable/add_stamp_24"/>
+        android:icon="@drawable/add_stamp_24"
+        android:title="Bollo" />
 
     <item android:id="@+id/assicurazione"
-        android:enabled="true"
-        android:title="Assicurazione"
-        android:icon="@drawable/add_insurance_24"/>
+        android:icon="@drawable/add_insurance_24"
+        android:title="Insurance"
+        />
 </menu>
