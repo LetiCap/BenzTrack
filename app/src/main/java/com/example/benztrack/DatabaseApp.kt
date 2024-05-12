@@ -168,4 +168,25 @@ class DatabaseApp(val context: Context) :
 
         return dataList
     }
+    fun getDataColumn(columnName:String, tableName: String): ArrayList<String> {
+        val dataList = ArrayList<String>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT \"$columnName\" FROM \"$tableName\"", null)
+
+        cursor.use {
+            while (it.moveToNext()) {
+                val rowData = StringBuilder()
+                for (i in 0 until it.columnCount) {
+                    //val columnName = it.getColumnName(i)
+                    val columnValue = it.getString(i)
+                    rowData.append(columnValue)
+                }
+                dataList.add(rowData.toString())
+            }
+        }
+
+        Log.d("DatabaseApp", "Data from $tableName: $dataList")
+
+        return dataList
+    }
 }

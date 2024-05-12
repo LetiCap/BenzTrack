@@ -47,7 +47,7 @@ class AddingCarFragment : Fragment() {
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
         val database = DatabaseApp(requireContext())
-        btnAdd = view.findViewById<Button>(R.id.btnAdd)
+        btnAdd = view.findViewById(R.id.btnAdd)
         expandableListView = view.findViewById(R.id.expandableListView)
         expandableListView.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
 
@@ -289,7 +289,7 @@ class AddingCarFragment : Fragment() {
         }
         carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleIds)
         expandableListView.setAdapter(carExpandableListAdapter)
-        btnAdd.visibility = View.GONE
+        btnAdd.visibility = View.INVISIBLE
         expandableListView.visibility = View.VISIBLE
 
     }

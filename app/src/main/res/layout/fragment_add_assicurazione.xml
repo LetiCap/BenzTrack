@@ -32,6 +32,14 @@
             android:layout_marginBottom="100dp"
             android:text="Add" />
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/linechart"
+            android:layout_width="match_parent"
+            android:layout_height="239dp"
+            android:layout_marginTop="-50dp"
+            android:visibility="invisible">
+        </com.github.mikephil.charting.charts.LineChart>
+
     </LinearLayout>
 
 </FrameLayout>

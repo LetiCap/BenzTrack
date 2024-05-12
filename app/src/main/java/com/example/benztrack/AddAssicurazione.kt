@@ -9,8 +9,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 
 class AddAssicurazione : Fragment() {
+    lateinit var lineChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,11 +29,14 @@ class AddAssicurazione : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val costoAssicurazione = view.findViewById<EditText>(R.id.CostoAssicurazione)
         val btnAdd = view.findViewById<Button>(R.id.AddAssurance)
+        lineChart=view.findViewById(R.id.linechart);
 
 
         val database = DatabaseApp(requireContext())
         val nometabellaINT= 123
         val nometabellaSTRING= "123"
+        val entries = getDataFromDatabase(database, nometabellaSTRING)
+        setupLineChart(entries)
 
 
 
@@ -36,15 +44,39 @@ class AddAssicurazione : Fragment() {
             val costoString = costoAssicurazione.text.toString()
             if(costoString.isNotEmpty()) {
                 val costoInt = Integer.parseInt(costoString)
-
-                database.insertValueforCar(nometabellaINT,"assicurazione",nometabellaSTRING,costoInt )
-                val datatype= database.getAllData("123")
-                println(datatype)
+                database.insertValueforCar(nometabellaINT, "assicurazione", nometabellaSTRING, costoInt)
+                val newEntries = getDataFromDatabase(database, nometabellaSTRING)
+                lineChart.visibility = View.VISIBLE
+                updateLineChart(newEntries)
             } else {
                 Toast.makeText(requireContext(), "non è stato inserito nulla ", Toast.LENGTH_SHORT).show()
 
             }
         }
-        // You can initialize views and handle UI interactions here
+
+    }
+    private fun setupLineChart(entries: List<Entry>) {
+        val dataSet = LineDataSet(entries, "ASSICURAZIONE")
+        val lineData = LineData(dataSet)
+        lineChart.data = lineData
+        lineChart.invalidate()
+    }
+
+    private fun getDataFromDatabase(database: DatabaseApp, tableName: String): ArrayList<Entry> {
+        val entries = ArrayList<Entry>()
+        val dataFromDatabase = database.getDataColumn("assicurazione",tableName)
+
+        // Itera sui dati ottenuti dal database e crea oggetti Entry
+        for ((index, rowData) in dataFromDatabase.withIndex()) {
+            val floatValue = rowData.toFloatOrNull() ?: 0f // Converti il valore in float, se possibile
+            entries.add(Entry(index.toFloat(), floatValue))
+        }
+        return entries
+    }
+    private fun updateLineChart(entries: List<Entry>) {
+        val dataSet = LineDataSet(entries, "BOLLO")
+        val lineData = LineData(dataSet)
+        lineChart.data = lineData
+        lineChart.invalidate()
     }
 }
