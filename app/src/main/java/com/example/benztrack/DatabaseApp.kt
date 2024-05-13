@@ -126,7 +126,7 @@ class DatabaseApp(val context: Context) :
         val db = this.writableDatabase
         val data = ContentValues()
         data.put(column, value)
-        data.put("dateColumn", getCurrentDateTime()) // Aggiungi la data corrente
+        data.put(COLUMN_DATE, getCurrentDateTime()) // Aggiungi la data corrente
         val tableName = "\"$table\""  // Aggiungi virgolette al nome della tabella
         db.insert(tableName, null, data)
         db.close()
