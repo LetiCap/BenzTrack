@@ -65,9 +65,8 @@ class AddBollo : Fragment() {
         val dataFromDatabase = database.getDataColumn("bollo",tableName)
 
         // Itera sui dati ottenuti dal database e crea oggetti Entry
-        for ((index, rowData) in dataFromDatabase.withIndex()) {
-            val floatValue = rowData.toFloatOrNull() ?: 0f // Converti il valore in float, se possibile
-            entries.add(Entry(index.toFloat(), floatValue))
+        for ((index, integerValue) in dataFromDatabase.withIndex()) {
+            entries.add(Entry(index.toFloat(), integerValue.toFloat()))
         }
         return entries
     }

@@ -168,20 +168,19 @@ class DatabaseApp(val context: Context) :
 
         return dataList
     }
-    fun getDataColumn(columnName:String, tableName: String): ArrayList<String> {
-        val dataList = ArrayList<String>()
+    fun getDataColumn(columnName: String, tableName: String): ArrayList<Int> {
+        val dataList = ArrayList<Int>()
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT \"$columnName\" FROM \"$tableName\"", null)
 
         cursor.use {
             while (it.moveToNext()) {
-                val rowData = StringBuilder()
                 for (i in 0 until it.columnCount) {
-                    //val columnName = it.getColumnName(i)
-                    val columnValue = it.getString(i)
-                    rowData.append(columnValue)
+                    if (!it.isNull(i)) { // Verifica se il valore non è nullo
+                        val columnValue = it.getInt(i)
+                        dataList.add(columnValue)
+                    }
                 }
-                dataList.add(rowData.toString())
             }
         }
 
@@ -189,4 +188,20 @@ class DatabaseApp(val context: Context) :
 
         return dataList
     }
+
+
+    fun getSumColumn(columnName:String, tableName: String): Int {
+        val dati= getDataColumn(columnName,tableName)
+        var sum = 0
+        for (data in dati) {
+            if (data != null) {
+                sum += data
+            }
+        }
+        Log.d("DatabaseApp", " $sum")
+
+        return sum
+    }
+
+
 }

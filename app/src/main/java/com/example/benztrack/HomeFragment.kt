@@ -1,8 +1,6 @@
 package com.example.benztrack
 
 import DatabaseApp
-import android.content.ContentValues
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -12,18 +10,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.MPPointF
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
     lateinit var pieChart: PieChart
@@ -37,17 +31,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-          //c
-        // Inizializzazione dello Spinner
+
         val vehicleSpinner: Spinner = view.findViewById(R.id.veichleSpinner)
         val database = DatabaseApp(requireContext())
-
         populateVehicle( vehicleSpinner, database)
         pieChart = view.findViewById(R.id.pieChart)
 
         // on below line we are setting user percent value,
         // setting description as enabled and offset for pie chart
-        Grafic()
+        this.Grafic(database)
 
 
 
@@ -89,13 +81,15 @@ class HomeFragment : Fragment() {
 
 
     }
-    private fun Grafic(){
-        pieChart.setUsePercentValues(true)
+    private fun Grafic(database: DatabaseApp) {
+
+        pieChart.setUsePercentValues(false)
         pieChart.getDescription().setEnabled(false)
         pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
 
         // on below line we are setting drag for our pie chart
         pieChart.setTouchEnabled(false)
+
 
         // on below line we are setting hole
         // and hole color for pie chart
@@ -123,9 +117,12 @@ class HomeFragment : Fragment() {
         // on below line we are creating array list and
         // adding data to it to display in pie chart
         val entries: ArrayList<PieEntry> = ArrayList()
-        entries.add(PieEntry(70f))
-        entries.add(PieEntry(20f))
-        entries.add(PieEntry(10f))
+        val bollo= database.getSumColumn("bollo", "123").toFloat()
+        val assi=database.getSumColumn("assicurazione", "123").toFloat()
+        val benz= database.getSumColumn("benzina", "123").toFloat()
+        entries.add(PieEntry(bollo,"Bollo"))
+        entries.add(PieEntry(assi,"assicurazione"))
+        entries.add(PieEntry(benz,"benzina"))
 
         // on below line we are setting pie data set
         val dataSet = PieDataSet(entries, "Mobile OS")
