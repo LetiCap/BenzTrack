@@ -20,7 +20,7 @@
     <com.google.android.gms.maps.MapView
         android:id="@+id/fuelMap"
         android:layout_width="match_parent"
-        android:layout_height="258dp"
+        android:layout_height="178dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="0dp"
         android:layout_weight="1"
@@ -30,9 +30,9 @@
         android:id="@+id/currentPosition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right|end"
         android:clickable="true"
-        android:src="@drawable/baseline_gps_fixed_24"
-        android:layout_gravity="bottom|right|end"/>
+        android:src="@drawable/baseline_gps_fixed_24" />
 
 
 </FrameLayout>
