@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+          //c
         // Inizializzazione dello Spinner
         val vehicleSpinner: Spinner = view.findViewById(R.id.veichleSpinner)
         val database = DatabaseApp(requireContext())
