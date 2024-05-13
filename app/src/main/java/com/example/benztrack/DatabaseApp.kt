@@ -7,6 +7,9 @@ import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DatabaseApp(val context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -29,6 +32,7 @@ class DatabaseApp(val context: Context) :
         private const val COLUMN_LAT = "latitudine"
         private const val COLUMN_LON = "longitudine"
         private const val COLUMN_KM = "KM"
+        private const val COLUMN_DATE = "data"
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -122,10 +126,16 @@ class DatabaseApp(val context: Context) :
         val db = this.writableDatabase
         val data = ContentValues()
         data.put(column, value)
+        data.put("dateColumn", getCurrentDateTime()) // Aggiungi la data corrente
         val tableName = "\"$table\""  // Aggiungi virgolette al nome della tabella
         db.insert(tableName, null, data)
         db.close()
+    }
 
+    fun getCurrentDateTime(): String {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy ss:mm:HH", Locale.getDefault())
+        val date = Date()
+        return dateFormat.format(date)
     }
 
     fun createTableInfoVehicle(id:String ){
@@ -133,12 +143,13 @@ class DatabaseApp(val context: Context) :
 
         try {
             db.execSQL("CREATE TABLE IF NOT EXISTS \"$id\" (" +
-                    "$COLUMN_BOLLO INTEGER, " +
-                    "$COLUMN_ASSICURAZIONE INTEGER, " +
-                    "$COLUMN_BENZINA INTEGER, " +
-                    "$COLUMN_KM INTEGER, " +
-                    "$COLUMN_LAT TEXT, " +
-                    "$COLUMN_LON TEXT)")
+                    "$COLUMN_BOLLO INTEGER " +
+                    "$COLUMN_ASSICURAZIONE INTEGER " +
+                    "$COLUMN_BENZINA INTEGER " +
+                    "$COLUMN_KM INTEGER " +
+                    "$COLUMN_LAT TEXT " +
+                    "$COLUMN_LON TEXT" +
+                    "$COLUMN_DATE TEXT)")
 
         } catch (e: Exception) {
             Log.e("DatabaseApp", "Error creating table $id: ${e.message}")
@@ -185,6 +196,24 @@ class DatabaseApp(val context: Context) :
         }
 
         Log.d("DatabaseApp", "Data from $tableName: $dataList")
+
+        return dataList
+    }
+
+    fun getDataWithDateColumn(columnName: String, dateColumnName: String, tableName: String): ArrayList<Pair<Int, String>> {
+        val dataList = ArrayList<Pair<Int, String>>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT \"$columnName\", \"$dateColumnName\" FROM \"$tableName\"", null)
+
+        cursor.use {
+            while (it.moveToNext()) {
+                val columnValue = it.getInt(0)
+                val dateValue = it.getString(1)
+                dataList.add(Pair(columnValue, dateValue))
+            }
+        }
+
+        Log.d("DatabaseApp", "Data with date from $tableName: $dataList")
 
         return dataList
     }
