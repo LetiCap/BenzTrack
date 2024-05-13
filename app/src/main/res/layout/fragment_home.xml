@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="-10dp"
-        android:text="Benvenuto nella schermata Home!"
-        android:textColor="@color/colorLightBlue"
-        android:textSize="18sp" />
-
+    <!-- Spinner -->
     <Spinner
         android:id="@+id/veichleSpinner"
         android:layout_width="match_parent"
@@ -27,25 +16,74 @@
         android:layout_marginBottom="30dp"
         android:clickable="true" />
 
+    <!-- TextView per l'intestazione -->
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="255dp"
-        android:layout_height="34dp"
+        android:id="@+id/idTVHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="Pie Chart"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_below="@id/veichleSpinner" />
+
+    <!-- PieChart -->
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="372dp"
+        android:layout_height="271dp"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:text=""
-        android:textColor="@color/colorLightBlue"
-        android:textSize="18sp" />
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/idTVHead"
+        android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="268dp"
-        android:layout_height="34dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="200dp"
-        android:text=""
-        android:textColor="@color/colorLightBlue"
-        android:textSize="18sp" />
+    <!-- TextViews per le categorie -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_below="@id/pieChart"
+        android:layout_centerHorizontal="true">
 
+        <!-- TextView per Android -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Android"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"/>
 
-</FrameLayout>
+        <!-- TextView per Apple -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Apple"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"/>
+
+        <!-- TextView per Microsoft -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Microsoft"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"/>
+    </LinearLayout>
+
+</RelativeLayout>
