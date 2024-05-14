@@ -12,7 +12,8 @@ class CarExpandableListAdapter(
     private val context: Context,
     private val vehicleDescriptions: List<String>,
     private val vehicleDetails: List<List<Pair<String, String>>>,
-    private val vehicleIds: List<Int>
+    private val vehicleIds: List<Int>,
+    private val CO2:Int
 ) : BaseExpandableListAdapter() {
     private val database: DatabaseApp = DatabaseApp(context)
 
@@ -85,7 +86,7 @@ class CarExpandableListAdapter(
             convertViewGroup.setOnClickListener {
                 // Otteniamo l'ID
                 val id = vehicleIds[groupPosition]
-                database.insertCar(id)
+                database.insertCar(id, CO2)
                 database.createTableInfoVehicle(id.toString())
             }
 

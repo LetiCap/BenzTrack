@@ -33,6 +33,7 @@ class DatabaseApp(val context: Context) :
         private const val COLUMN_LON = "longitudine"
         private const val COLUMN_KM = "KM"
         private const val COLUMN_DATE = "data"
+        private const val COLUMN_CO2 ="CO2"
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -42,7 +43,8 @@ class DatabaseApp(val context: Context) :
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_TYPES($COLUMN_TYPES TEXT PRIMARY KEY)")
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES TEXT PRIMARY KEY)")
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS TEXT PRIMARY KEY)")
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_ID INTEGER PRIMARY KEY)")
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_ID INTEGER PRIMARY KEY,"+ "$COLUMN_CO2 INTEGER)")
 
 
 
@@ -113,27 +115,28 @@ class DatabaseApp(val context: Context) :
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
 
-    fun insertCar(id:Int){
+    fun insertCar(id:Int,CO2:Int){
         val db= this.writableDatabase
         val data= ContentValues()
         data.put(COLUMN_ID, id)
+        data.put(COLUMN_CO2,CO2)
         db.insert(TABLE_LISTOFCARS, null, data)
         db.close()
 
     }
 
-    fun insertValueforCar(id:Int, column:String, table:String , value:Int){
+    fun insertValueforCar(column: String, table: String, value: Int) {
         val db = this.writableDatabase
         val data = ContentValues()
         data.put(column, value)
-        data.put(COLUMN_DATE, getCurrentDateTime()) // Aggiungi la data corrente
+        data.put(COLUMN_DATE, getCurrentDateTime()) // Inserisci la data formattata come stringa
         val tableName = "\"$table\""  // Aggiungi virgolette al nome della tabella
         db.insert(tableName, null, data)
         db.close()
     }
 
-    fun getCurrentDateTime(): String {
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy ss:mm:HH", Locale.getDefault())
+    private fun getCurrentDateTime(): String {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) // Formato della data e dell'ora
         val date = Date()
         return dateFormat.format(date)
     }
@@ -143,12 +146,12 @@ class DatabaseApp(val context: Context) :
 
         try {
             db.execSQL("CREATE TABLE IF NOT EXISTS \"$id\" (" +
-                    "$COLUMN_BOLLO INTEGER " +
-                    "$COLUMN_ASSICURAZIONE INTEGER " +
-                    "$COLUMN_BENZINA INTEGER " +
-                    "$COLUMN_KM INTEGER " +
-                    "$COLUMN_LAT TEXT " +
-                    "$COLUMN_LON TEXT" +
+                    "$COLUMN_BOLLO INTEGER, " +
+                    "$COLUMN_ASSICURAZIONE INTEGER, " +
+                    "$COLUMN_BENZINA INTEGER, " +
+                    "$COLUMN_KM INTEGER, " +
+                    "$COLUMN_LAT TEXT, " +
+                    "$COLUMN_LON TEXT, " +
                     "$COLUMN_DATE TEXT)")
 
         } catch (e: Exception) {
@@ -200,16 +203,16 @@ class DatabaseApp(val context: Context) :
         return dataList
     }
 
-    fun getDataWithDateColumn(columnName: String, dateColumnName: String, tableName: String): ArrayList<Pair<Int, String>> {
+    fun getDataWithDateColumn(dato: String,date:String, tableName: String): ArrayList<Pair<Int, String>> {
         val dataList = ArrayList<Pair<Int, String>>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT \"$columnName\", \"$dateColumnName\" FROM \"$tableName\"", null)
+        val cursor = db.rawQuery("SELECT \"$dato\", \"$date\" FROM \"$tableName\"", null)
 
         cursor.use {
             while (it.moveToNext()) {
-                val columnValue = it.getInt(0)
-                val dateValue = it.getString(1)
-                dataList.add(Pair(columnValue, dateValue))
+                val Value = it.getInt(0)
+                val date = it.getString(1)
+                dataList.add(Pair(Value, date))
             }
         }
 

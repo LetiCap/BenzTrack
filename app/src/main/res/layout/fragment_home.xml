@@ -38,7 +38,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:layout_below="@id/idTVHead"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
 
     <!-- TextViews per le categorie -->
     <LinearLayout

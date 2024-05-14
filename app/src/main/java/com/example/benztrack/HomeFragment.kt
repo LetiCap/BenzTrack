@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
 
         // on below line we are setting user percent value,
         // setting description as enabled and offset for pie chart
-        this.Grafic(database)
+       // this.Grafic(database)
 
 
 

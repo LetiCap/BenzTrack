@@ -32,6 +32,7 @@ class AddingCarFragment : Fragment() {
     private lateinit var expandableListView: ExpandableListView
     private lateinit var carExpandableListAdapter: CarExpandableListAdapter
     private lateinit var btnAdd: Button
+    private lateinit var CO2: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +47,7 @@ class AddingCarFragment : Fragment() {
         val TipoSpinner:Spinner = view.findViewById(R.id.Tipo)
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
+        CO2 = view.findViewById<EditText>(R.id.ConsumoCO2)
         val database = DatabaseApp(requireContext())
         btnAdd = view.findViewById(R.id.btnAdd)
         expandableListView = view.findViewById(R.id.expandableListView)
@@ -64,10 +66,11 @@ class AddingCarFragment : Fragment() {
         AnnoSpinner.onItemSelectedListener = createItemSelectedListener(AnnoList, "Anno")
 
         btnAdd.setOnClickListener {
+            /*
             if (!userClickedSpinner) {
                 Toast.makeText(requireContext(), "Seleziona un anno", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            }
+            }*/
 
             if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition == 0 || AnnoSpinner.selectedItemPosition == 0) {
                 Toast.makeText(
@@ -124,11 +127,7 @@ class AddingCarFragment : Fragment() {
 
         lista.add(0, "Seleziona un $scritta")
 
-       /* when (item) {
-            "years" -> lista.add(1, "2008")
-            "types" ->  lista.add(1, "Sedan")
-            "makes" ->  lista.add(1, "Buick")
-        }*/
+
         val dataFromTable = database.getAllData(tabella)
 
         // Aggiungi i dati alla lista
@@ -287,7 +286,9 @@ class AddingCarFragment : Fragment() {
             val description = StringBuilder("Veicolo ${index + 1}\n")
             description.toString()
         }
-        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleIds)
+        val Co2String = CO2.text.toString()
+        val CO2 = Co2String.toInt()
+        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleIds,CO2)
         expandableListView.setAdapter(carExpandableListAdapter)
         btnAdd.visibility = View.INVISIBLE
         expandableListView.visibility = View.VISIBLE
