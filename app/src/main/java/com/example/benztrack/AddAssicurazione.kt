@@ -13,7 +13,6 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
 
 class AddAssicurazione : Fragment() {
     lateinit var lineChart: LineChart
@@ -60,7 +59,7 @@ class AddAssicurazione : Fragment() {
     ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
-        val dataFromDatabase = database.getDataColumn("assicurazione", tableName)
+        val dataFromDatabase = database.getDataColumnInt("assicurazione", tableName)
 
         // Itera sui dati ottenuti dal database e crea oggetti Entry
         for ((index, value) in dataFromDatabase.withIndex()) {
@@ -72,7 +71,7 @@ class AddAssicurazione : Fragment() {
     }
 
     private fun updateLineChart(entries: ArrayList<Entry>) {
-        val dataSet = LineDataSet(entries, "BOLLO")
+        val dataSet = LineDataSet(entries, "ASSICURAZIONE")
         val lineData = LineData(dataSet)
         lineChart.data = lineData
 

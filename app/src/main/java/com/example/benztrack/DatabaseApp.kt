@@ -25,7 +25,8 @@ class DatabaseApp(val context: Context) :
         private const val COLUMN_TYPES = "types"
         private const val COLUMN_MAKES = "makes"
         private const val COLUMN_YEARS = "years"
-        private const val COLUMN_ID = "id"
+
+        private const val COLUMN_MODEL = "model"
         private const val COLUMN_BOLLO = "bollo"
         private const val COLUMN_ASSICURAZIONE = "assicurazione"
         private const val COLUMN_BENZINA = "benzina"
@@ -44,7 +45,7 @@ class DatabaseApp(val context: Context) :
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES TEXT PRIMARY KEY)")
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS TEXT PRIMARY KEY)")
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_ID INTEGER PRIMARY KEY,"+ "$COLUMN_CO2 INTEGER)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_MODEL TEXT PRIMARY KEY,"+ "$COLUMN_CO2 INTEGER)")
 
 
 
@@ -115,10 +116,10 @@ class DatabaseApp(val context: Context) :
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
 
-    fun insertCar(id:Int,CO2:Int){
+    fun insertCar(model:String,CO2:Int){
         val db= this.writableDatabase
         val data= ContentValues()
-        data.put(COLUMN_ID, id)
+        data.put(COLUMN_MODEL, model)
         data.put(COLUMN_CO2,CO2)
         db.insert(TABLE_LISTOFCARS, null, data)
         db.close()
@@ -182,7 +183,7 @@ class DatabaseApp(val context: Context) :
 
         return dataList
     }
-    fun getDataColumn(columnName: String, tableName: String): ArrayList<Int> {
+    fun getDataColumnInt(columnName: String, tableName: String): ArrayList<Int> {
         val dataList = ArrayList<Int>()
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT \"$columnName\" FROM \"$tableName\"", null)
@@ -192,6 +193,27 @@ class DatabaseApp(val context: Context) :
                 for (i in 0 until it.columnCount) {
                     if (!it.isNull(i)) { // Verifica se il valore non è nullo
                         val columnValue = it.getInt(i)
+                        dataList.add(columnValue)
+                    }
+                }
+            }
+        }
+
+        Log.d("DatabaseApp", "Data from $tableName: $dataList")
+
+        return dataList
+    }
+
+    fun getDataColumnString(columnName: String, tableName: String): ArrayList<String> {
+        val dataList = ArrayList<String>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT \"$columnName\" FROM \"$tableName\"", null)
+
+        cursor.use {
+            while (it.moveToNext()) {
+                for (i in 0 until it.columnCount) {
+                    if (!it.isNull(i)) { // Verifica se il valore non è nullo
+                        val columnValue = it.getString(i)
                         dataList.add(columnValue)
                     }
                 }
@@ -223,7 +245,7 @@ class DatabaseApp(val context: Context) :
 
 
     fun getSumColumn(columnName:String, tableName: String): Int {
-        val dati= getDataColumn(columnName,tableName)
+        val dati= getDataColumnInt(columnName,tableName)
         var sum = 0
         for (data in dati) {
             if (data != null) {

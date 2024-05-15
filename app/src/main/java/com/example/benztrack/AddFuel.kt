@@ -1,5 +1,6 @@
 package com.example.benztrack
 
+import DatabaseApp
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -8,9 +9,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -28,6 +36,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var rootView: View
+    lateinit var lineChart: LineChart
 
     //codice per la richiesta del permesso
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
@@ -48,6 +57,61 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         return rootView
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val costoFuel = view.findViewById<EditText>(R.id.CostoFuel)
+        val btnAdd = view.findViewById<Button>(R.id.Add)
+      //  lineChart = view.findViewById(R.id.linechart)
+
+        val database = DatabaseApp(requireContext())
+        val tableName = "t123"
+
+        val datidaldatabase=getDataFromDatabase(database, tableName)
+     //  updateLineChart(datidaldatabase)
+
+
+        btnAdd.setOnClickListener {
+            val costoString = costoFuel.text.toString()
+            if (costoString.isNotEmpty()) {
+                val costoInt = costoString.toInt()
+                database.insertValueforCar("benzina", tableName, costoInt)
+              //  val newEntries = getDataFromDatabase(database, tableName)
+           //     updateLineChart(newEntries)
+
+            } else {
+                Toast.makeText(requireContext(), "Inserire il costo della benzina", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
+    private fun getDataFromDatabase(
+        database: DatabaseApp,
+        tableName: String
+    ): ArrayList<Entry> {
+        val entries = ArrayList<Entry>()
+
+        val dataFromDatabase = database.getDataColumnInt("benzina", tableName)
+
+        // Itera sui dati ottenuti dal database e crea oggetti Entry
+        for ((index, value) in dataFromDatabase.withIndex()) {
+            val entry = Entry(index.toFloat(), value.toFloat())
+            entries.add(entry)
+        }
+
+        return entries
+    }
+
+
+    private fun updateLineChart(entries: ArrayList<Entry>) {
+        val dataSet = LineDataSet(entries, "BENZINA")
+        val lineData = LineData(dataSet)
+        lineChart.data = lineData
+
+        // Configura l'asse x per visualizzare le date come etichette personalizzate
+
+        lineChart.invalidate()
+    }
     private fun currentLocation(rootView: View) {
 
         val currentPosition = rootView.findViewById<FloatingActionButton>(R.id.currentPosition)

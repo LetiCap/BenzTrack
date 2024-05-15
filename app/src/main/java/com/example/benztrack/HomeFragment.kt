@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
 
        val lista : MutableList<String> =  mutableListOf()
         lista.add(0, "Seleziona un veicolo")
-        val dataFromTable = database.getAllData("CarsTable")
+        val dataFromTable = database.getDataColumnString("model","CarsTable")
 
         // Aggiungi i dati alla lista
         lista.addAll(dataFromTable)

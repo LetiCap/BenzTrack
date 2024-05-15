@@ -12,7 +12,7 @@ class CarExpandableListAdapter(
     private val context: Context,
     private val vehicleDescriptions: List<String>,
     private val vehicleDetails: List<List<Pair<String, String>>>,
-    private val vehicleIds: List<Int>,
+    private val vehicleModel: List<String>,
     private val CO2:Int
 ) : BaseExpandableListAdapter() {
     private val database: DatabaseApp = DatabaseApp(context)
@@ -85,9 +85,10 @@ class CarExpandableListAdapter(
             // Aggiungiamo il listener di clic al convertViewGroup
             convertViewGroup.setOnClickListener {
                 // Otteniamo l'ID
-                val id = vehicleIds[groupPosition]
-                database.insertCar(id, CO2)
-                database.createTableInfoVehicle(id.toString())
+                val model = vehicleModel[groupPosition]
+                Toast.makeText(context, "Hai selezionato il modello: $model", Toast.LENGTH_SHORT).show()
+                database.insertCar(model, CO2)
+                database.createTableInfoVehicle(model)
             }
 
         return convertViewGroup

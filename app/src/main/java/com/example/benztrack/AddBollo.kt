@@ -2,7 +2,6 @@ package com.example.benztrack
 
 import DatabaseApp
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
 
 
 class AddBollo : Fragment() {
@@ -62,7 +60,7 @@ class AddBollo : Fragment() {
     ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
-        val dataFromDatabase = database.getDataColumn("bollo", tableName)
+        val dataFromDatabase = database.getDataColumnInt("bollo", tableName)
 
         // Itera sui dati ottenuti dal database e crea oggetti Entry
         for ((index, value) in dataFromDatabase.withIndex()) {

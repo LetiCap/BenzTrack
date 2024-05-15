@@ -27,7 +27,7 @@ class AddingCarFragment : Fragment() {
     private var AnnoList: MutableList<String> = mutableListOf()
     private var MarchioList: MutableList<String> = mutableListOf()
     private var TipoList: MutableList<String> = mutableListOf()
-    private var vehicleIds: MutableList<Int> = mutableListOf()
+    private var vehicleModel: MutableList<String> = mutableListOf()
 
     private lateinit var expandableListView: ExpandableListView
     private lateinit var carExpandableListAdapter: CarExpandableListAdapter
@@ -54,10 +54,11 @@ class AddingCarFragment : Fragment() {
         expandableListView.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.white))
 
         lifecycleScope.launch {
+            delay(500)
             populateSpinner("makes", MarchioSpinner, MarchioList, database)
-            delay(200)
+            delay(500)
             populateSpinner("years", AnnoSpinner, AnnoList,database)
-            delay(200)
+            delay(500)
             populateSpinner("types", TipoSpinner, TipoList, database)
         }
 
@@ -66,11 +67,11 @@ class AddingCarFragment : Fragment() {
         AnnoSpinner.onItemSelectedListener = createItemSelectedListener(AnnoList, "Anno")
 
         btnAdd.setOnClickListener {
-            /*
+
             if (!userClickedSpinner) {
                 Toast.makeText(requireContext(), "Seleziona un anno", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            }*/
+            }
 
             if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition == 0 || AnnoSpinner.selectedItemPosition == 0) {
                 Toast.makeText(
@@ -265,12 +266,12 @@ class AddingCarFragment : Fragment() {
                 val vehicleJsonObject = vehiclesJsonArray.getJSONObject(i)
                 val details = mutableListOf<Pair<String, String>>()
 
-                val id = vehicleJsonObject.getString("id")
+                val model = vehicleJsonObject.getString("model")
                 // Ottieni l'ID del veicolo
-                vehicleIds.add(id.toInt())
+                vehicleModel.add(model.toString())
 
 
-                details.add(Pair("Modello", vehicleJsonObject.getString("model")))
+                details.add(Pair("Modello", model))
                 details.add(Pair("Tipo", vehicleJsonObject.getString("type")))
                 details.add(Pair("Anno", vehicleJsonObject.getString("year")))
                 details.add(Pair("Marchio", vehicleJsonObject.getString("make")))
@@ -288,7 +289,7 @@ class AddingCarFragment : Fragment() {
         }
         val Co2String = CO2.text.toString()
         val CO2 = Co2String.toInt()
-        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleIds,CO2)
+        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleModel,CO2)
         expandableListView.setAdapter(carExpandableListAdapter)
         btnAdd.visibility = View.INVISIBLE
         expandableListView.visibility = View.VISIBLE
