@@ -13,6 +13,7 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 
 class AddAssicurazione : Fragment() {
     lateinit var lineChart: LineChart
@@ -29,53 +30,54 @@ class AddAssicurazione : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val costoAssicurazione = view.findViewById<EditText>(R.id.CostoAssicurazione)
         val btnAdd = view.findViewById<Button>(R.id.AddAssurance)
-        lineChart=view.findViewById(R.id.linechart);
 
+        lineChart = view.findViewById(R.id.linechart)
 
         val database = DatabaseApp(requireContext())
-        val nometabellaINT= 123
-        val nometabellaSTRING= "123"
-        val entries = getDataFromDatabase(database, nometabellaSTRING)
-        setupLineChart(entries)
+        val tableName = "t123"
+        val datidaldatabase=getDataFromDatabase(database, tableName)
+        updateLineChart(datidaldatabase)
 
 
-
-        btnAdd.setOnClickListener{
+        btnAdd.setOnClickListener {
             val costoString = costoAssicurazione.text.toString()
-            if(costoString.isNotEmpty()) {
-                val costoInt = Integer.parseInt(costoString)
-                database.insertValueforCar(nometabellaINT, "assicurazione", nometabellaSTRING, costoInt)
-                val newEntries = getDataFromDatabase(database, nometabellaSTRING)
-                lineChart.visibility = View.VISIBLE
+            if (costoString.isNotEmpty()) {
+                val costoInt = costoString.toInt()
+                database.insertValueforCar("assicurazione", tableName, costoInt)
+                val newEntries = getDataFromDatabase(database, tableName)
                 updateLineChart(newEntries)
-            } else {
-                Toast.makeText(requireContext(), "non è stato inserito nulla ", Toast.LENGTH_SHORT).show()
 
+            } else {
+                Toast.makeText(requireContext(), "Inserire il costo dell'assicurazione", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
-
-    }
-    private fun setupLineChart(entries: List<Entry>) {
-        val dataSet = LineDataSet(entries, "ASSICURAZIONE")
-        val lineData = LineData(dataSet)
-        lineChart.data = lineData
-        lineChart.invalidate()
     }
 
-    private fun getDataFromDatabase(database: DatabaseApp, tableName: String): ArrayList<Entry> {
+    private fun getDataFromDatabase(
+        database: DatabaseApp,
+        tableName: String
+    ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
-        val dataFromDatabase = database.getDataColumn("assicurazione",tableName)
+
+        val dataFromDatabase = database.getDataColumn("assicurazione", tableName)
 
         // Itera sui dati ottenuti dal database e crea oggetti Entry
-        for ((index, integerValue) in dataFromDatabase.withIndex()) {
-            entries.add(Entry(index.toFloat(), integerValue.toFloat()))
+        for ((index, value) in dataFromDatabase.withIndex()) {
+            val entry = Entry(index.toFloat(), value.toFloat())
+            entries.add(entry)
         }
+
         return entries
     }
-    private fun updateLineChart(entries: List<Entry>) {
+
+    private fun updateLineChart(entries: ArrayList<Entry>) {
         val dataSet = LineDataSet(entries, "BOLLO")
         val lineData = LineData(dataSet)
         lineChart.data = lineData
+
+        // Configura l'asse x per visualizzare le date come etichette personalizzate
+
         lineChart.invalidate()
     }
 }
