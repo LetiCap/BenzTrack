@@ -27,6 +27,7 @@ class DatabaseApp(val context: Context) :
         private const val COLUMN_YEARS = "years"
 
         private const val COLUMN_MODEL = "model"
+        private const val COLUMN_MAINTENANCE = "manutenzione"
         private const val COLUMN_BOLLO = "bollo"
         private const val COLUMN_ASSICURAZIONE = "assicurazione"
         private const val COLUMN_SPEND_ON_FUEL = "benzina"
@@ -152,6 +153,7 @@ class DatabaseApp(val context: Context) :
                     "$COLUMN_ASSICURAZIONE REAL, " +
                     "$COLUMN_SPEND_ON_FUEL REAL, " +
                     "$COLUMN_FUEL_COST REAL, " +
+                    "$COLUMN_MAINTENANCE REAL, " +
                     "$COLUMN_KM REAL, " +
                     "$COLUMN_LAT TEXT, " +
                     "$COLUMN_LON TEXT, " +

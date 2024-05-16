@@ -128,6 +128,7 @@ class HomeFragment : Fragment() {
         entries.add(PieEntry(10f, "Bollo"))
         entries.add(PieEntry(10f, "Insurance"))
         entries.add(PieEntry(10f, "Fuel"))
+        entries.add(PieEntry(10f, "Maintenance"))
 
         // Setting pie data set
         val dataSet = PieDataSet(entries, "")
@@ -138,9 +139,10 @@ class HomeFragment : Fragment() {
 
         // Adding colors to the data set
         val colors: ArrayList<Int> = ArrayList()
-        colors.add(resources.getColor(R.color.colorBlack))
+        colors.add(resources.getColor(R.color.colorLightBlue))
         colors.add(resources.getColor(R.color.colorRed))
         colors.add(resources.getColor(R.color.colorLightGreen))
+        colors.add(resources.getColor(R.color.colorDutchWhite))
         dataSet.colors = colors
 
         // Setting pie data
@@ -166,14 +168,16 @@ class HomeFragment : Fragment() {
         val bollo = database.getSumColumn("bollo", "t123").toFloat()
         val assi = database.getSumColumn("assicurazione", "t123").toFloat()
         val benz = database.getSumColumn("benzina", "t123").toFloat()
+        val manut = database.getSumColumn("manutenzione", "t123").toFloat()
 
         // Log the values
-        Log.d("HomeFragment", "Bollo: $bollo, Assicurazione: $assi, Benzina: $benz")
+        Log.d("HomeFragment", "Bollo: $bollo, Insurance: $assi, Fuel: $benz, yMaintenance: $manut")
 
         // Adding entries, initializing to 0 if needed
         entries.add(PieEntry(if (bollo == 0f) 0.01f else bollo, "Bollo"))
         entries.add(PieEntry(if (assi == 0f) 0.01f else assi, "Insurance"))
         entries.add(PieEntry(if (benz == 0f) 0.01f else benz, "Fuel"))
+        entries.add(PieEntry(if (benz == 0f) 0.01f else manut, "Maintenance"))
 
         // Setting pie data set
         val dataSet = PieDataSet(entries, "")
@@ -186,9 +190,10 @@ class HomeFragment : Fragment() {
 
         // Adding colors to the data set
         val colors: ArrayList<Int> = ArrayList()
-        colors.add(resources.getColor(R.color.colorBlack))
+        colors.add(resources.getColor(R.color.colorLightBlue))
         colors.add(resources.getColor(R.color.colorRed))
         colors.add(resources.getColor(R.color.colorLightGreen))
+        colors.add(resources.getColor(R.color.colorDutchWhite))
         dataSet.colors = colors
 
         // Setting pie data

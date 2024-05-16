@@ -18,8 +18,18 @@
             android:layout_marginLeft="50dp"
             android:layout_marginBottom="35dp"
             android:layout_marginRight="50dp"
-
             android:hint="Amount spent on Bollo..."
+            android:ems="10"
+            android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/CostoAssicurazione"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="35dp"
+            android:hint="Amount spent on Insurance..."
             android:ems="10"
             android:inputType="numberDecimal" />
 
@@ -29,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
             android:layout_marginRight="100dp"
-            android:layout_marginBottom="100dp"
+
 
             android:text="Add" />
 
