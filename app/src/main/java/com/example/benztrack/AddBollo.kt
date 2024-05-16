@@ -32,6 +32,7 @@ class AddBollo : Fragment() {
         val btnAdd = view.findViewById<Button>(R.id.Add)
         lineChart = view.findViewById(R.id.linechart)
         lineChart.description.isEnabled = false
+        //casino
 
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
