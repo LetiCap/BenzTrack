@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
+
             android:layout_marginRight="50dp"
 
             android:clickable="true"
@@ -55,14 +55,15 @@
             android:layout_marginRight="50dp"
             android:layout_marginBottom="100dp"
             android:ems="20"
-            android:hint="Write CO2 consume..."
-            android:inputType="number" />
+            android:hint="CO2 from vehicle..."
+            android:inputType="numberDecimal" />
 
         <ExpandableListView
             android:id="@+id/expandableListView"
             android:layout_width="match_parent"
-            android:layout_height="124dp"
+            android:layout_height="151dp"
             android:layout_marginLeft="50dp"
+            android:layout_marginTop="-35dp"
             android:layout_marginRight="50dp"
             android:clickable="true"
             android:minHeight="48dp" />

@@ -16,12 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginBottom="35dp"
             android:layout_marginRight="50dp"
-            android:layout_marginBottom="100dp"
-            android:hint="Write Bollo cost..."
+
+            android:hint="Amount spent on Bollo..."
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="numberDecimal" />
 
         <Button
             android:id="@+id/Add"
@@ -37,12 +37,10 @@
             android:id="@+id/linechart"
             android:layout_width="match_parent"
             android:layout_height="239dp"
-            android:layout_marginTop="-50dp"
+            android:layout_marginTop="175dp"
             >
 
         </com.github.mikephil.charting.charts.LineChart>
-
-
 
 
     </LinearLayout>

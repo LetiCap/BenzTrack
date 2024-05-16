@@ -45,7 +45,7 @@ class DatabaseApp(val context: Context) :
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES TEXT PRIMARY KEY)")
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS TEXT PRIMARY KEY)")
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_MODEL TEXT PRIMARY KEY,"+ "$COLUMN_CO2 INTEGER)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_MODEL TEXT PRIMARY KEY,"+ "$COLUMN_CO2 REAL)")
 
 
 
@@ -116,7 +116,7 @@ class DatabaseApp(val context: Context) :
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
 
-    fun insertCar(model:String,CO2:Int){
+    fun insertCar(model:String,CO2:Double){
         val db= this.writableDatabase
         val data= ContentValues()
         data.put(COLUMN_MODEL, model)
@@ -126,7 +126,7 @@ class DatabaseApp(val context: Context) :
 
     }
 
-    fun insertValueforCar(column: String, table: String, value: Int) {
+    fun insertValueforCar(column: String, table: String, value: Double) {
         val db = this.writableDatabase
         val data = ContentValues()
         data.put(column, value)
@@ -142,21 +142,21 @@ class DatabaseApp(val context: Context) :
         return dateFormat.format(date)
     }
 
-    fun createTableInfoVehicle(id:String ){
+    fun createTableInfoVehicle(tablename:String ){
         val db = this.writableDatabase
 
         try {
-            db.execSQL("CREATE TABLE IF NOT EXISTS \"$id\" (" +
-                    "$COLUMN_BOLLO INTEGER, " +
-                    "$COLUMN_ASSICURAZIONE INTEGER, " +
-                    "$COLUMN_BENZINA INTEGER, " +
-                    "$COLUMN_KM INTEGER, " +
+            db.execSQL("CREATE TABLE IF NOT EXISTS \"$tablename\" (" +
+                    "$COLUMN_BOLLO REAL, " +
+                    "$COLUMN_ASSICURAZIONE REAL, " +
+                    "$COLUMN_BENZINA REAL, " +
+                    "$COLUMN_KM REAL, " +
                     "$COLUMN_LAT TEXT, " +
                     "$COLUMN_LON TEXT, " +
                     "$COLUMN_DATE TEXT)")
 
         } catch (e: Exception) {
-            Log.e("DatabaseApp", "Error creating table $id: ${e.message}")
+            Log.e("DatabaseApp", "Error creating table $tablename: ${e.message}")
         } finally {
             db.close()
         }
@@ -183,8 +183,8 @@ class DatabaseApp(val context: Context) :
 
         return dataList
     }
-    fun getDataColumnInt(columnName: String, tableName: String): ArrayList<Int> {
-        val dataList = ArrayList<Int>()
+    fun getDataColumnDouble(columnName: String, tableName: String): ArrayList<Double> {
+        val dataList = ArrayList<Double>()
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT \"$columnName\" FROM \"$tableName\"", null)
 
@@ -192,7 +192,7 @@ class DatabaseApp(val context: Context) :
             while (it.moveToNext()) {
                 for (i in 0 until it.columnCount) {
                     if (!it.isNull(i)) { // Verifica se il valore non è nullo
-                        val columnValue = it.getInt(i)
+                        val columnValue = it.getDouble(i)
                         dataList.add(columnValue)
                     }
                 }
@@ -244,9 +244,9 @@ class DatabaseApp(val context: Context) :
     }
 
 
-    fun getSumColumn(columnName:String, tableName: String): Int {
-        val dati= getDataColumnInt(columnName,tableName)
-        var sum = 0
+    fun getSumColumn(columnName:String, tableName: String): Double {
+        val dati= getDataColumnDouble(columnName,tableName)
+        var sum = 0.0
         for (data in dati) {
             if (data != null) {
                 sum += data

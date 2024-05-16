@@ -17,7 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import java.io.IOException
-
+//manca il fatto di gestire che non vengono caricate le cose. il fatto di selezioanre per forza la CO2
 class AddingCarFragment : Fragment() {
     private var selectedAnno: String = ""
     private var selectedType: String = ""
@@ -47,7 +47,7 @@ class AddingCarFragment : Fragment() {
         val TipoSpinner:Spinner = view.findViewById(R.id.Tipo)
         val AnnoSpinner: Spinner = view.findViewById(R.id.Anno)
         val MarchioSpinner: Spinner = view.findViewById(R.id.Marchio)
-        CO2 = view.findViewById<EditText>(R.id.ConsumoCO2)
+        CO2 = view.findViewById(R.id.ConsumoCO2)
         val database = DatabaseApp(requireContext())
         btnAdd = view.findViewById(R.id.btnAdd)
         expandableListView = view.findViewById(R.id.expandableListView)
@@ -55,11 +55,11 @@ class AddingCarFragment : Fragment() {
 
         lifecycleScope.launch {
             delay(500)
-            populateSpinner("makes", MarchioSpinner, MarchioList, database)
+            populateSpinner("Make", MarchioSpinner, MarchioList, database)
             delay(500)
-            populateSpinner("years", AnnoSpinner, AnnoList,database)
+            populateSpinner("Year", AnnoSpinner, AnnoList,database)
             delay(500)
-            populateSpinner("types", TipoSpinner, TipoList, database)
+            populateSpinner("Type", TipoSpinner, TipoList, database)
         }
 
         MarchioSpinner.onItemSelectedListener = createItemSelectedListener(MarchioList, "Marchio")
@@ -72,8 +72,8 @@ class AddingCarFragment : Fragment() {
                 Toast.makeText(requireContext(), "Seleziona un anno", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition == 0 || AnnoSpinner.selectedItemPosition == 0) {
+            val costoString = CO2.text.toString()
+            if (TipoSpinner.selectedItemPosition == 0 || MarchioSpinner.selectedItemPosition == 0 || AnnoSpinner.selectedItemPosition == 0 || costoString.isEmpty()) {
                 Toast.makeText(
                     requireContext(),
                     "Seleziona un parametro valido per ogni sezione", Toast.LENGTH_LONG).show()
@@ -82,51 +82,18 @@ class AddingCarFragment : Fragment() {
             }
         }
     }
-/*
-    val tv = view.findViewById<TextView>(R.id.text_home)
-    val tv1 = view.findViewById<TextView>(R.id.textView2)
-    val tv2 = view.findViewById<TextView>(R.id.textView)
 
-    // Inizializzazione del database
-    val database = DatabaseApp(requireContext())
-
-    // Recupera tutti i dati dalla tabella "TypesTable"
-    val datatype = database.getAllData("TypesTable")
-    val datamake = database.getAllData("MakesTable")
-    val datayear = database.getAllData("YearsTable")
-
-    // Costruisci una stringa con i dati ottenuti
-
-
-    var tabValue = ""
-    for (data in datatype) {
-        tabValue += "$data"
-    }
-    var tab = ""
-    for (data in datamake) {
-        tab += "$data"
-    }
-    var tabV = ""
-    for (data in datayear) {
-        tabV += "$data"
-    }
-
-    // Imposta la stringa nel TextView
-    tv.text = tabValue
-    tv1.text = tab
-    tv2.text = tabV
-    */
 
     private suspend fun populateSpinner(item: String, spinner: Spinner, lista: MutableList<String>, database: DatabaseApp) {
         var scritta = ""
         var tabella=""
         when (item) {
-            "years" -> { scritta = "Anno" ; tabella ="YearsTable" }
-            "types" -> {scritta = "Tipo"; tabella ="TypesTable" }
-            "makes" -> {scritta = "Marchio"; tabella ="MakesTable" }
+            "Year" -> { scritta = "Anno" ; tabella ="YearsTable" }
+            "Type" -> {scritta = "Tipo"; tabella ="TypesTable" }
+            "Make" -> {scritta = "Marchio"; tabella ="MakesTable" }
         }
 
-        lista.add(0, "Seleziona un $scritta")
+        lista.add(0, "Select  $item")
 
 
         val dataFromTable = database.getAllData(tabella)
@@ -134,46 +101,16 @@ class AddingCarFragment : Fragment() {
         // Aggiungi i dati alla lista
         lista.addAll(dataFromTable)
 
+        withContext(Dispatchers.Main) {
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                lista
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
+        }
 
-
-/*
-        val requestUrl = "https://car-data.p.rapidapi.com/cars/$item"
-
-        try {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(requestUrl)
-                .get()
-                .addHeader("X-RapidAPI-Key", "0dc8f0efbdmsha7a5bc2f50d8e7dp1a3ad3jsn088f99490027")
-                .build()
-            val response = withContext(Dispatchers.IO) {
-                client.newCall(request).execute()
-            }
-
-            if (response.isSuccessful) {
-                val responseBody = response.body?.string()
-                val responseArray = responseBody
-                    ?.removeSurrounding("[", "]")
-                    ?.replace("\"", "")
-                    ?.split(",")
-                    ?.toTypedArray()
-                responseArray?.let { lista.addAll(it) }
-*/
-                withContext(Dispatchers.Main) {
-                    val adapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        lista
-                    )
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinner.adapter = adapter
-                }
-     /*       } else {
-                throw IOException("Errore nella richiesta: ${response.code}")
-            }
-        } catch (e: IOException) {
-            Log.e("AddingCarFragment", "Errore di connessione: ${e.message}")
-        }*/
     }
 
     private fun createItemSelectedListener(
@@ -284,11 +221,11 @@ class AddingCarFragment : Fragment() {
 
     private fun updateListView(vehicleDetailsList: List<List<Pair<String, String>>>) {
         val vehicleDescriptions = vehicleDetailsList.mapIndexed { index, details ->
-            val description = StringBuilder("Veicolo ${index + 1}\n")
+            val description = StringBuilder("Vehicle ${index + 1}\n")
             description.toString()
         }
         val Co2String = CO2.text.toString()
-        val CO2 = Co2String.toInt()
+        val CO2 = Co2String.toDouble()
         carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleModel,CO2)
         expandableListView.setAdapter(carExpandableListAdapter)
         btnAdd.visibility = View.INVISIBLE

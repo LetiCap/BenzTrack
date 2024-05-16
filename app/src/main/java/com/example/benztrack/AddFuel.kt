@@ -59,7 +59,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val costoFuel = view.findViewById<EditText>(R.id.CostoFuel)
+        val costoFuel = view.findViewById<EditText>(R.id.AmountSpentOnFuel)
         val btnAdd = view.findViewById<Button>(R.id.Add)
       //  lineChart = view.findViewById(R.id.linechart)
 
@@ -73,8 +73,8 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         btnAdd.setOnClickListener {
             val costoString = costoFuel.text.toString()
             if (costoString.isNotEmpty()) {
-                val costoInt = costoString.toInt()
-                database.insertValueforCar("benzina", tableName, costoInt)
+                val costoDouble = costoString.toDouble()
+                database.insertValueforCar("benzina", tableName, costoDouble)
               //  val newEntries = getDataFromDatabase(database, tableName)
            //     updateLineChart(newEntries)
 
@@ -91,7 +91,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
-        val dataFromDatabase = database.getDataColumnInt("benzina", tableName)
+        val dataFromDatabase = database.getDataColumnDouble("benzina", tableName)
 
         // Itera sui dati ottenuti dal database e crea oggetti Entry
         for ((index, value) in dataFromDatabase.withIndex()) {

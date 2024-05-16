@@ -13,7 +13,7 @@ class CarExpandableListAdapter(
     private val vehicleDescriptions: List<String>,
     private val vehicleDetails: List<List<Pair<String, String>>>,
     private val vehicleModel: List<String>,
-    private val CO2:Int
+    private val CO2:Double
 ) : BaseExpandableListAdapter() {
     private val database: DatabaseApp = DatabaseApp(context)
 

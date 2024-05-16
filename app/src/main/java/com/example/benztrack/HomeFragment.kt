@@ -4,23 +4,26 @@ import DatabaseApp
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.utils.MPPointF
 
 class HomeFragment : Fragment() {
     lateinit var pieChart: PieChart
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,26 +36,21 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val vehicleSpinner: Spinner = view.findViewById(R.id.veichleSpinner)
+
+
+
         val database = DatabaseApp(requireContext())
-        populateVehicle( vehicleSpinner, database)
+        populateVehicle(vehicleSpinner, database)
         pieChart = view.findViewById(R.id.pieChart)
 
-        // on below line we are setting user percent value,
-        // setting description as enabled and offset for pie chart
-       // this.Grafic(database)
-
-
-
-
+        // Imposta il grafico inizialmente con valori a 0
+        setupInitialGraph()
     }
 
-    private fun populateVehicle( spinner: Spinner,  database: DatabaseApp) {
-        var scritta = ""
-
-
-       val lista : MutableList<String> =  mutableListOf()
-        lista.add(0, "Seleziona un veicolo")
-        val dataFromTable = database.getDataColumnString("model","CarsTable")
+    private fun populateVehicle(spinner: Spinner, database: DatabaseApp) {
+        val lista: MutableList<String> = mutableListOf()
+        lista.add(0, "Select vehicle")
+        val dataFromTable = database.getDataColumnString("model", "CarsTable")
 
         // Aggiungi i dati alla lista
         lista.addAll(dataFromTable)
@@ -66,101 +64,150 @@ class HomeFragment : Fragment() {
         spinner.adapter = adapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 // Azioni da eseguire quando un elemento viene selezionato
                 val selectedVehicle = parent?.getItemAtPosition(position).toString()
+
+                if (position > 0) {
+                    // Chiama la funzione Grafic solo quando un veicolo è selezionato (non il placeholder)
+                    updateGraphWithDatabaseValues(database)
+                }
+
                 // Esempio di azione: visualizzare il veicolo selezionato
-                Toast.makeText(requireContext(), "Veicolo selezionato: $selectedVehicle", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Veicolo selezionato: $selectedVehicle",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Azioni da eseguire quando nessun elemento è selezionato
             }
         }
-
-
-
     }
-    private fun Grafic(database: DatabaseApp) {
 
+    private fun setupInitialGraph() {
         pieChart.setUsePercentValues(false)
-        pieChart.getDescription().setEnabled(false)
+
+        // Rimuovi la descrizione
+        pieChart.description.isEnabled = false
         pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
 
-        // on below line we are setting drag for our pie chart
+        // Disabling touch for the pie chart
         pieChart.setTouchEnabled(false)
 
-
-        // on below line we are setting hole
-        // and hole color for pie chart
-        pieChart.setDrawHoleEnabled(true)
+        // Setting hole and hole color for pie chart
+        pieChart.isDrawHoleEnabled = true
         pieChart.setHoleColor(Color.WHITE)
 
-        // on below line we are setting circle color and alpha
+        // Setting circle color and alpha
         pieChart.setTransparentCircleColor(Color.WHITE)
         pieChart.setTransparentCircleAlpha(110)
 
-        // on  below line we are setting hole radius
-        pieChart.setHoleRadius(58f)
-        pieChart.setTransparentCircleRadius(61f)
+        // Setting hole radius
+        pieChart.holeRadius = 15f
+        pieChart.transparentCircleRadius = 15f
 
-        // on below line we are setting center text
         pieChart.setDrawCenterText(true)
 
-
-
-        // on below line we are disabling our legend for pie chart
-        pieChart.legend.isEnabled = false
-        pieChart.setEntryLabelColor(Color.WHITE)
+        // Enabling the legend for pie chart
+        pieChart.legend.isEnabled = true
+        pieChart.setEntryLabelColor(Color.TRANSPARENT)
         pieChart.setEntryLabelTextSize(12f)
+        pieChart.legend.formSize=15f
+        pieChart.legend.textSize = 15f
 
-        // on below line we are creating array list and
-        // adding data to it to display in pie chart
+        // Creating array list and adding initial data to it (0 values)
         val entries: ArrayList<PieEntry> = ArrayList()
-        val bollo= database.getSumColumn("bollo", "123").toFloat()
-        val assi=database.getSumColumn("assicurazione", "123").toFloat()
-        val benz= database.getSumColumn("benzina", "123").toFloat()
-        entries.add(PieEntry(bollo,"Bollo"))
-        entries.add(PieEntry(assi,"assicurazione"))
-        entries.add(PieEntry(benz,"benzina"))
+        entries.add(PieEntry(10f, "Bollo"))
+        entries.add(PieEntry(10f, "Insurance"))
+        entries.add(PieEntry(10f, "Fuel"))
 
-        // on below line we are setting pie data set
-        val dataSet = PieDataSet(entries, "Mobile OS")
+        // Setting pie data set
+        val dataSet = PieDataSet(entries, "")
 
-        // on below line we are setting icons.
-        dataSet.setDrawIcons(false)
+        dataSet.setDrawIcons(true)
         dataSet.sliceSpace = 3f
-        dataSet.iconsOffset = MPPointF(0f, 40f)
         dataSet.selectionShift = 5f
 
-        // add a lot of colors to list
+        // Adding colors to the data set
         val colors: ArrayList<Int> = ArrayList()
-        colors.add(resources.getColor(R.color.purple_200))
-        colors.add(resources.getColor(R.color.yellow))
-        colors.add(resources.getColor(R.color.red))
-
-        // on below line we are setting colors.
+        colors.add(resources.getColor(R.color.colorBlack))
+        colors.add(resources.getColor(R.color.colorRed))
+        colors.add(resources.getColor(R.color.colorLightGreen))
         dataSet.colors = colors
 
-        // on below line we are setting pie data set
+        // Setting pie data
         val data = PieData(dataSet)
-        data.setValueFormatter(PercentFormatter())
+        // Imposta il valore del testo su null per rimuovere la scritta sugli spicchi
+        data.setDrawValues(true)
         data.setValueTextSize(15f)
         data.setValueTypeface(Typeface.DEFAULT_BOLD)
         data.setValueTextColor(Color.WHITE)
-        pieChart.setData(data)
+        pieChart.data = data
 
-        // undo all highlights
+        // Undo all highlights
         pieChart.setHighlightPerTapEnabled(false)
 
-        // loading chart
+        // Refreshing the chart
         pieChart.invalidate()
     }
 
+    private fun updateGraphWithDatabaseValues(database: DatabaseApp) {
+        val entries: ArrayList<PieEntry> = ArrayList()
 
+        // Fetching the data from the database
+        val bollo = database.getSumColumn("bollo", "t123").toFloat()
+        val assi = database.getSumColumn("assicurazione", "t123").toFloat()
+        val benz = database.getSumColumn("benzina", "t123").toFloat()
 
+        // Log the values
+        Log.d("HomeFragment", "Bollo: $bollo, Assicurazione: $assi, Benzina: $benz")
 
+        // Adding entries, initializing to 0 if needed
+        entries.add(PieEntry(if (bollo == 0f) 0.01f else bollo, "Bollo"))
+        entries.add(PieEntry(if (assi == 0f) 0.01f else assi, "Insurance"))
+        entries.add(PieEntry(if (benz == 0f) 0.01f else benz, "Fuel"))
 
+        // Setting pie data set
+        val dataSet = PieDataSet(entries, "")
+        pieChart.legend.formSize=15f
+        pieChart.legend.textSize = 15f
 
+        dataSet.setDrawIcons(true)
+        dataSet.sliceSpace = 3f
+        dataSet.selectionShift = 5f
 
+        // Adding colors to the data set
+        val colors: ArrayList<Int> = ArrayList()
+        colors.add(resources.getColor(R.color.colorBlack))
+        colors.add(resources.getColor(R.color.colorRed))
+        colors.add(resources.getColor(R.color.colorLightGreen))
+        dataSet.colors = colors
+
+        // Setting pie data
+        val data = PieData(dataSet)
+        data.setValueFormatter(PercentFormatter(pieChart)) // This will format values as percentages
+        // Imposta il valore del testo su null per rimuovere
+
+        // This will format values as percentages
+        // Imposta il valore del testo su null per rimuovere la scritta sugli spicchi
+
+        data.setValueTextSize(15f)
+        data.setValueTypeface(Typeface.DEFAULT_BOLD)
+        data.setValueTextColor(Color.WHITE)
+        pieChart.data = data
+
+        // Undo all highlights
+        pieChart.setHighlightPerTapEnabled(false)
+
+        // Refreshing the chart
+        pieChart.invalidate()
+    }
 }

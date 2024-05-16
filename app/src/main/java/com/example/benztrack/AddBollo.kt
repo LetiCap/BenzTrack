@@ -31,6 +31,7 @@ class AddBollo : Fragment() {
         val costoBollo = view.findViewById<EditText>(R.id.CostoBollo)
         val btnAdd = view.findViewById<Button>(R.id.Add)
         lineChart = view.findViewById(R.id.linechart)
+        lineChart.description.isEnabled = false
 
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
@@ -42,8 +43,8 @@ class AddBollo : Fragment() {
         btnAdd.setOnClickListener {
             val costoString = costoBollo.text.toString()
             if (costoString.isNotEmpty()) {
-                val costoInt = costoString.toInt()
-                database.insertValueforCar("bollo", tableName, costoInt)
+                val costoDouble = costoString.toDouble()
+                database.insertValueforCar("bollo", tableName, costoDouble)
                 val newEntries = getDataFromDatabase(database, tableName)
                 updateLineChart(newEntries)
 
@@ -60,7 +61,7 @@ class AddBollo : Fragment() {
     ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
 
-        val dataFromDatabase = database.getDataColumnInt("bollo", tableName)
+        val dataFromDatabase = database.getDataColumnDouble("bollo", tableName)
 
         // Itera sui dati ottenuti dal database e crea oggetti Entry
         for ((index, value) in dataFromDatabase.withIndex()) {
