@@ -29,7 +29,8 @@ class DatabaseApp(val context: Context) :
         private const val COLUMN_MODEL = "model"
         private const val COLUMN_BOLLO = "bollo"
         private const val COLUMN_ASSICURAZIONE = "assicurazione"
-        private const val COLUMN_BENZINA = "benzina"
+        private const val COLUMN_SPEND_ON_FUEL = "benzina"
+        private const val COLUMN_FUEL_COST="CostoBenzina"
         private const val COLUMN_LAT = "latitudine"
         private const val COLUMN_LON = "longitudine"
         private const val COLUMN_KM = "KM"
@@ -149,7 +150,8 @@ class DatabaseApp(val context: Context) :
             db.execSQL("CREATE TABLE IF NOT EXISTS \"$tablename\" (" +
                     "$COLUMN_BOLLO REAL, " +
                     "$COLUMN_ASSICURAZIONE REAL, " +
-                    "$COLUMN_BENZINA REAL, " +
+                    "$COLUMN_SPEND_ON_FUEL REAL, " +
+                    "$COLUMN_FUEL_COST REAL, " +
                     "$COLUMN_KM REAL, " +
                     "$COLUMN_LAT TEXT, " +
                     "$COLUMN_LON TEXT, " +

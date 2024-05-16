@@ -59,7 +59,9 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val costoFuel = view.findViewById<EditText>(R.id.AmountSpentOnFuel)
+        val SpentOnFuel = view.findViewById<EditText>(R.id.AmountSpentOnFuel)
+        val FuelCost = view.findViewById<EditText>(R.id.FuelCost)
+        val CurrentKm = view.findViewById<EditText>(R.id.CurrentKm)
         val btnAdd = view.findViewById<Button>(R.id.Add)
       //  lineChart = view.findViewById(R.id.linechart)
 
@@ -71,10 +73,16 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
 
         btnAdd.setOnClickListener {
-            val costoString = costoFuel.text.toString()
-            if (costoString.isNotEmpty()) {
-                val costoDouble = costoString.toDouble()
-                database.insertValueforCar("benzina", tableName, costoDouble)
+            val SpentString = SpentOnFuel.text.toString()
+            val FuelString = FuelCost.text.toString()
+            val KmString = CurrentKm.text.toString()
+            if (SpentString.isNotEmpty()&& FuelString.isNotEmpty()&&KmString.isNotEmpty()) {
+                val SpentDouble = SpentString.toDouble()
+                val FuelDouble = FuelString.toDouble()
+                val KmDouble = KmString.toDouble()
+                database.insertValueforCar("benzina", tableName, SpentDouble)
+                database.insertValueforCar("CostoBenzina", tableName, FuelDouble)
+                database.insertValueforCar("KM", tableName, KmDouble)
               //  val newEntries = getDataFromDatabase(database, tableName)
            //     updateLineChart(newEntries)
 
