@@ -27,6 +27,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -68,7 +69,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
 
-        val datidaldatabase=getDataFromDatabase(database, tableName)
+       // val datidaldatabase=getDataFromDatabase(database, tableName)
      //  updateLineChart(datidaldatabase)
 
 

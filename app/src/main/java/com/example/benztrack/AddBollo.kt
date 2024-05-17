@@ -40,9 +40,9 @@ class AddBollo : Fragment() {
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
         database.createTableInfoVehicle(tableName)
-        val bollodalDatabase=getDataFromDatabase(database, tableName,"bollo")
-        val assicurazionedalDatabase=getDataFromDatabase(database, tableName,"assicurazione")
-        updateLineChart(bollodalDatabase,assicurazionedalDatabase )
+       // val bollodalDatabase=getDataFromDatabase(database, tableName,"bollo")
+       // val assicurazionedalDatabase=getDataFromDatabase(database, tableName,"assicurazione")
+        //updateLineChart(bollodalDatabase,assicurazionedalDatabase )
 
 
         btnAdd.setOnClickListener {

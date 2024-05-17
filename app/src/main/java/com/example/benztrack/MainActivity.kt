@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(AddBollo())
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.assicurazione ->{
-                    replaceFragment(AddAssicurazione())
+                R.id.manutenzione ->{
+                    replaceFragment(AddManutenzione())
                     return@setOnNavigationItemSelectedListener true
                 }
                 else -> return@setOnNavigationItemSelectedListener false

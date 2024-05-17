@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
-class AddAssicurazione : Fragment() {
+class AddManutenzione : Fragment() {
     lateinit var lineChart: LineChart
 
     override fun onCreateView(
@@ -22,7 +22,7 @@ class AddAssicurazione : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_assicurazione, container, false)
+        return inflater.inflate(R.layout.fragment_add_manutenzione, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,8 +35,8 @@ class AddAssicurazione : Fragment() {
 
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
-        val datidaldatabase=getDataFromDatabase(database, tableName)
-        updateLineChart(datidaldatabase)
+       // val datidaldatabase=getDataFromDatabase(database, tableName)
+       // updateLineChart(datidaldatabase)
 
 
         btnAdd.setOnClickListener {

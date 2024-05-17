@@ -20,8 +20,8 @@
         android:icon="@drawable/add_stamp_24"
         android:title="Bollo" />
 
-    <item android:id="@+id/assicurazione"
+    <item android:id="@+id/manutenzione"
         android:icon="@drawable/add_insurance_24"
-        android:title="Insurance"
+        android:title="Maintance"
         />
 </menu>
