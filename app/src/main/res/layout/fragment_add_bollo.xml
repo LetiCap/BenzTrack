@@ -18,7 +18,8 @@
             android:layout_marginLeft="50dp"
             android:layout_marginBottom="35dp"
             android:layout_marginRight="50dp"
-            android:hint="Amount spent on Bollo..."
+            android:drawableRight="@drawable/baseline_euro_symbol_24"
+            android:hint="Spent on Bollo..."
             android:ems="10"
             android:inputType="numberDecimal" />
         <EditText
@@ -29,7 +30,8 @@
 
             android:layout_marginRight="50dp"
             android:layout_marginBottom="35dp"
-            android:hint="Amount spent on Insurance..."
+            android:drawableRight="@drawable/baseline_euro_symbol_24"
+            android:hint="Spent on Insurance..."
             android:ems="10"
             android:inputType="numberDecimal" />
 
