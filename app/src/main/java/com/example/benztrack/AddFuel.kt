@@ -20,6 +20,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -36,6 +39,8 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
     private lateinit var rootView: View
     lateinit var lineChart: LineChart
 
@@ -47,7 +52,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        rootView= inflater.inflate(R.layout.fragment_fuel, container, false)
+        rootView = inflater.inflate(R.layout.fragment_fuel, container, false)
 
 
         currentLocation(rootView)
@@ -64,31 +69,35 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val FuelCost = view.findViewById<EditText>(R.id.FuelCost)
         val CurrentKm = view.findViewById<EditText>(R.id.CurrentKm)
         val btnAdd = view.findViewById<Button>(R.id.Add)
-      //  lineChart = view.findViewById(R.id.linechart)
+        //  lineChart = view.findViewById(R.id.linechart)
 
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
 
-       // val datidaldatabase=getDataFromDatabase(database, tableName)
-     //  updateLineChart(datidaldatabase)
+        // val datidaldatabase=getDataFromDatabase(database, tableName)
+        //  updateLineChart(datidaldatabase)
 
 
         btnAdd.setOnClickListener {
             val SpentString = SpentOnFuel.text.toString()
             val FuelString = FuelCost.text.toString()
             val KmString = CurrentKm.text.toString()
-            if (SpentString.isNotEmpty()&& FuelString.isNotEmpty()&&KmString.isNotEmpty()) {
+            if (SpentString.isNotEmpty() && FuelString.isNotEmpty() && KmString.isNotEmpty()) {
                 val SpentDouble = SpentString.toDouble()
                 val FuelDouble = FuelString.toDouble()
                 val KmDouble = KmString.toDouble()
                 database.insertValueforCar("benzina", tableName, SpentDouble)
                 database.insertValueforCar("CostoBenzina", tableName, FuelDouble)
                 database.insertValueforCar("KM", tableName, KmDouble)
-              //  val newEntries = getDataFromDatabase(database, tableName)
-           //     updateLineChart(newEntries)
+                //  val newEntries = getDataFromDatabase(database, tableName)
+                //     updateLineChart(newEntries)
 
             } else {
-                Toast.makeText(requireContext(), "Inserire il costo della benzina", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    "Inserire il costo della benzina",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
         }
@@ -121,6 +130,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
         lineChart.invalidate()
     }
+
     private fun currentLocation(rootView: View) {
 
         val currentPosition = rootView.findViewById<FloatingActionButton>(R.id.currentPosition)
@@ -133,6 +143,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
             ) {
                 // Il permesso è già stato concesso, ottieni la posizione attuale
                 getCurrentLocation()
+                //createLocationRequest()
             } else {
                 // Il permesso non è stato concesso, richiedilo all'utente
                 requestPermissions(
@@ -154,7 +165,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
         // Inizializza il client per ottenere la posizione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
+        //createLocationRequest()
         // Richiedi il permesso di accesso alla posizione
         requestLocationPermission()
     }
@@ -174,6 +185,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         } else {
             // Se il permesso è già stato concesso, ottieni la posizione attuale
             getCurrentLocation()
+            //createLocationRequest()
         }
     }
 
@@ -210,15 +222,65 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         }
     }
 
+    /* private fun createLocationRequest() {
+        locationRequest = LocationRequest.create().apply {
+            interval = 10000 // 10 seconds
+            fastestInterval = 5000 // 5 seconds
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult.lastLocation?.let { location ->
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    saveLocationData(latitude, longitude)
+
+                    val currentPosition = LatLng(latitude, longitude)
+                    googleMap.addMarker(
+                        MarkerOptions().position(currentPosition).title("La mia posizione attuale")
+                    )
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 15f))
+                }
+            }
+        }
+    }
+
+    */
+    private fun startLocationUpdates() {
+        if (this::fusedLocationClient.isInitialized) {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+        }
+    }
+
+    private fun stopLocationUpdates() {
+        if (this::fusedLocationClient.isInitialized) {
+            fusedLocationClient.removeLocationUpdates(locationCallback)
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Se il permesso è stato concesso, ottieni la posizione attuale
                 getCurrentLocation()
+                //createLocationRequest()
             } else {
                 //toast per avviso permesso negato
             }
@@ -226,7 +288,8 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     }
 
     private fun saveLocationData(latitude: Double, longitude: Double) {
-        val sharedPreferences = requireContext().getSharedPreferences("location_data", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("location_data", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putFloat("latitude", latitude.toFloat())
         editor.putFloat("longitude", longitude.toFloat())
@@ -236,11 +299,15 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+        if (this::googleMap.isInitialized) {
+            startLocationUpdates()
+        }
     }
 
     override fun onPause() {
         super.onPause()
         mapView.onPause()
+        stopLocationUpdates()
     }
 
     override fun onDestroy() {
@@ -257,5 +324,4 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         super.onLowMemory()
         mapView.onLowMemory()
     }
-
 }
