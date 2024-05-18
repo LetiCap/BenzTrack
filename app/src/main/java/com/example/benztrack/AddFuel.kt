@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -200,6 +201,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            Log.d("getCurrentLocation", "I permessi non sono concessi, esci dalla funzione")
 
             return
         }
@@ -247,7 +249,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     }
 
     */
-    private fun startLocationUpdates() {
+   /* private fun startLocationUpdates() {
         if (this::fusedLocationClient.isInitialized) {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
@@ -268,7 +270,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         if (this::fusedLocationClient.isInitialized) {
             fusedLocationClient.removeLocationUpdates(locationCallback)
         }
-    }
+    }*/
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -282,7 +284,12 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 getCurrentLocation()
                 //createLocationRequest()
             } else {
-                //toast per avviso permesso negato
+                // Permesso negato, mostra un messaggio all'utente
+                Toast.makeText(
+                    requireContext(),
+                    "Per ottenere la posizione attuale è necessario concedere il permesso",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -300,14 +307,14 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         super.onResume()
         mapView.onResume()
         if (this::googleMap.isInitialized) {
-            startLocationUpdates()
+            //startLocationUpdates()
         }
     }
 
     override fun onPause() {
         super.onPause()
         mapView.onPause()
-        stopLocationUpdates()
+        //stopLocationUpdates()
     }
 
     override fun onDestroy() {
