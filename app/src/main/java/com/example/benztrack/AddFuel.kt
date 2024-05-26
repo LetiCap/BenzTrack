@@ -224,53 +224,6 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         }
     }
 
-    /* private fun createLocationRequest() {
-        locationRequest = LocationRequest.create().apply {
-            interval = 10000 // 10 seconds
-            fastestInterval = 5000 // 5 seconds
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { location ->
-                    val latitude = location.latitude
-                    val longitude = location.longitude
-                    saveLocationData(latitude, longitude)
-
-                    val currentPosition = LatLng(latitude, longitude)
-                    googleMap.addMarker(
-                        MarkerOptions().position(currentPosition).title("La mia posizione attuale")
-                    )
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 15f))
-                }
-            }
-        }
-    }
-
-    */
-   /* private fun startLocationUpdates() {
-        if (this::fusedLocationClient.isInitialized) {
-            if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
-        }
-    }
-
-    private fun stopLocationUpdates() {
-        if (this::fusedLocationClient.isInitialized) {
-            fusedLocationClient.removeLocationUpdates(locationCallback)
-        }
-    }*/
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
