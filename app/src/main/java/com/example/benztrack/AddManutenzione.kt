@@ -35,8 +35,8 @@ class AddManutenzione : Fragment() {
 
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
-       // val datidaldatabase=getDataFromDatabase(database, tableName)
-       // updateLineChart(datidaldatabase)
+        val datidaldatabase=getDataFromDatabase(database, tableName)
+        updateLineChart(datidaldatabase)
 
 
         btnAdd.setOnClickListener {
