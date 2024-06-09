@@ -32,6 +32,10 @@ class AddManutenzione : Fragment() {
         val btnAdd = view.findViewById<Button>(R.id.addMaintenance)
         val selectedVehicleHome = arguments?.getString("data")
         val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
+        if (selectedVehicleHome == null) {
+            Toast.makeText(requireContext(), "Nessun veicolo selezionato", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
 
@@ -39,7 +43,7 @@ class AddManutenzione : Fragment() {
         lineChart.description.isEnabled = false
 
         val database = DatabaseApp(requireContext())
-        val tableName = "t123"
+        val tableName = selectedVehicleHome.toString()
         val datidaldatabase=getDataFromDatabase(database, tableName)
         updateLineChart(datidaldatabase)
 

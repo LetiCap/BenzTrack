@@ -53,8 +53,7 @@ class HomeFragment : Fragment() {
     private fun populateVehicle(spinner: Spinner, database: DatabaseApp) {
         val lista: MutableList<String> = mutableListOf()
         lista.add(0, "Select vehicle")
-        lista.add(1, "Lucerne")
-        lista.add(2, "Buick")
+
 
         val dataFromTable = database.getDataColumnString("model", "CarsTable")
 
@@ -81,8 +80,11 @@ class HomeFragment : Fragment() {
 
                 if (position > 0) {
                     // Chiama la funzione Grafic solo quando un veicolo è selezionato (non il placeholder)
+
                     (activity as MainActivity).setSelectedVehicle(selectedVehicle)
-                    updateGraphWithDatabaseValues(database)
+
+                    updateGraphWithDatabaseValues(database, selectedVehicle)
+
                 }
 
                 // Esempio di azione: visualizzare il veicolo selezionato
@@ -170,14 +172,14 @@ class HomeFragment : Fragment() {
         pieChart.invalidate()
     }
 
-    private fun updateGraphWithDatabaseValues(database: DatabaseApp) {
+    private fun updateGraphWithDatabaseValues(database: DatabaseApp,tableName :String ) {
         val entries: ArrayList<PieEntry> = ArrayList()
 
         // Fetching the data from the database
-        val bollo = database.getSumColumn("bollo", "t123").toFloat()
-        val assi = database.getSumColumn("assicurazione", "t123").toFloat()
-        val benz = database.getSumColumn("benzina", "t123").toFloat()
-        val manut = database.getSumColumn("manutenzione", "t123").toFloat()
+        val bollo = database.getSumColumn("bollo", tableName).toFloat()
+        val assi = database.getSumColumn("assicurazione", tableName).toFloat()
+        val benz = database.getSumColumn("benzina", tableName).toFloat()
+        val manut = database.getSumColumn("manutenzione", tableName).toFloat()
 
         // Log the values
         Log.d("HomeFragment", "Bollo: $bollo, Insurance: $assi, Fuel: $benz, yMaintenance: $manut")

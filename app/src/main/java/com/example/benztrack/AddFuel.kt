@@ -41,6 +41,8 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
     private lateinit var rootView: View
     lateinit var lineChart: LineChart
 
@@ -53,6 +55,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         rootView = inflater.inflate(R.layout.fragment_fuel, container, false)
+
 
         currentLocation(rootView)
 
@@ -68,8 +71,11 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val FuelCost = view.findViewById<EditText>(R.id.FuelCost)
         val CurrentKm = view.findViewById<EditText>(R.id.CurrentKm)
         val btnAdd = view.findViewById<Button>(R.id.Add)
+        val selectedVehicleHome = arguments?.getString("data")
+        val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
+
+        txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
         //  lineChart = view.findViewById(R.id.linechart)
-        var txtConsMedio = view.findViewById<TextView>(R.id.txtConsMedio)
 
         val database = DatabaseApp(requireContext())
         val tableName = "t123"
@@ -90,29 +96,19 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 database.insertValueforCar("CostoBenzina", tableName, FuelDouble)
                 database.insertValueforCar("KM", tableName, KmDouble)
                 //  val newEntries = getDataFromDatabase(database, tableName)
-                //  updateLineChart(newEntries)
-
-                val averageConsumption = calculateAverageConsumption(database, tableName)
-                txtConsMedio.text = "Consumo medio: $averageConsumption km/l"
-
-                //val newEntries = getDataFromDatabase(database, tableName)
-                //updateLineChart(newEntries)
+                //     updateLineChart(newEntries)
 
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "Inserire tutti i dati richiesti",
+                    "Inserire il costo della benzina",
                     Toast.LENGTH_SHORT
                 )
                     .show()
             }
         }
     }
-    private fun calculateAverageConsumption(database: DatabaseApp, tableName: String): Double {
-        val totalFuel = database.getSumColumn("benzina", tableName)
-        val totalKm = database.getSumColumn("KM", tableName)
-        return if (totalFuel > 0) totalKm / totalFuel else 0.0
-    }
+
     private fun getDataFromDatabase(
         database: DatabaseApp,
         tableName: String

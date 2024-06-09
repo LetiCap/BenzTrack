@@ -75,9 +75,9 @@ class CarExpandableListAdapter(
         val details = vehicleDetails[groupPosition] // Otteniamo i dettagli corrispondenti al gruppo
         val detail = details[childPosition] // Otteniamo il dettaglio specifico per questo elemento
 
-        // Se l'elemento è l'ID, non visualizzarlo
 
-            // Se non è l'ID, visualizziamo normalmente i dettagli
+
+            //  visualizziamo normalmente i dettagli
             val textTitleView = convertViewGroup!!.findViewById<TextView>(R.id.textTitle)
             textTitleView.text = "${detail.first}: ${detail.second}" // Visualizziamo chiave e valore
             convertViewGroup.visibility = View.VISIBLE
@@ -89,6 +89,7 @@ class CarExpandableListAdapter(
                 Toast.makeText(context, "Hai selezionato il modello: $model", Toast.LENGTH_SHORT).show()
                 database.insertCar(model, CO2)
                 database.createTableInfoVehicle(model)
+
             }
 
         return convertViewGroup

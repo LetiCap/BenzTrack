@@ -34,6 +34,10 @@ class AddBollo : Fragment() {
 
         val selectedVehicleHome = arguments?.getString("data")
         val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
+        if (selectedVehicleHome == null) {
+            Toast.makeText(requireContext(), "Nessun veicolo selezionato", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
 
@@ -44,39 +48,46 @@ class AddBollo : Fragment() {
         lineChart.description.isEnabled = false
 
         val database = DatabaseApp(requireContext())
-        val tableName = "t123"
-        database.createTableInfoVehicle(tableName)
-
-        // Recupera i dati dal database e aggiorna il grafico quando il fragment viene creato
-        val initialEntriesB = getDataFromDatabase(database, tableName, "bollo")
-        val initialEntriesA = getDataFromDatabase(database, tableName, "assicurazione")
-        updateLineChart(initialEntriesB, initialEntriesA)
+        val tableName: String = selectedVehicleHome.toString()
 
 
-        btnAdd.setOnClickListener {
-            val costoString = costoBollo.text.toString()
-            val costoStringAssi = costoAssicurazione.text.toString()
 
-            if (costoString.isNotEmpty()) {
-                val costoDouble = costoString.toDouble()
-                database.insertValueforCar("bollo", tableName, costoDouble)
-                val newEntriesB = getDataFromDatabase(database, tableName, "bollo")
-                val newEntriesA = getDataFromDatabase(database, tableName, "assicurazione")
-                updateLineChart(newEntriesB, newEntriesA)
+
+            // Recupera i dati dal database e aggiorna il grafico quando il fragment viene creato
+            val initialEntriesB = getDataFromDatabase(database, tableName, "bollo")
+            val initialEntriesA = getDataFromDatabase(database, tableName, "assicurazione")
+            updateLineChart(initialEntriesB, initialEntriesA)
+
+
+            btnAdd.setOnClickListener {
+                val costoString = costoBollo.text.toString()
+                val costoStringAssi = costoAssicurazione.text.toString()
+
+                if (costoString.isNotEmpty()) {
+                    val costoDouble = costoString.toDouble()
+                    database.insertValueforCar("bollo", tableName, costoDouble)
+                    val newEntriesB = getDataFromDatabase(database, tableName, "bollo")
+                    val newEntriesA = getDataFromDatabase(database, tableName, "assicurazione")
+                    updateLineChart(newEntriesB, newEntriesA)
+                }
+
+                if (costoStringAssi.isNotEmpty()) {
+                    val costoDouble = costoStringAssi.toDouble()
+                    database.insertValueforCar("assicurazione", tableName, costoDouble)
+                    val newEntriesA = getDataFromDatabase(database, tableName, "assicurazione")
+                    val newEntriesB = getDataFromDatabase(database, tableName, "bollo")
+                    updateLineChart(newEntriesB, newEntriesA)
+                }
+
+                if (costoString.isEmpty() && costoStringAssi.isEmpty()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Inserire assicurazione e/o bollo",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
-            if (costoStringAssi.isNotEmpty()) {
-                val costoDouble = costoStringAssi.toDouble()
-                database.insertValueforCar("assicurazione", tableName, costoDouble)
-                val newEntriesA = getDataFromDatabase(database, tableName, "assicurazione")
-                val newEntriesB = getDataFromDatabase(database, tableName, "bollo")
-                updateLineChart(newEntriesB, newEntriesA)
-            }
-
-            if (costoString.isEmpty() && costoStringAssi.isEmpty()) {
-                Toast.makeText(requireContext(), "Inserire assicurazione e/o bollo", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun getDataFromDatabase(
