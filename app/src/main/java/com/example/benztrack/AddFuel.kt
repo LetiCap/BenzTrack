@@ -73,6 +73,10 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val btnAdd = view.findViewById<Button>(R.id.Add)
         val selectedVehicleHome = arguments?.getString("data")
         val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
+        if (selectedVehicleHome == null) {
+            Toast.makeText(requireContext(), "Nessun veicolo selezionato", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
         //  lineChart = view.findViewById(R.id.linechart)
