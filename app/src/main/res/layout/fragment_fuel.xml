@@ -53,6 +53,16 @@
             android:textSize="18sp" />
 
 
+        <TextView
+            android:id="@+id/txtConsMedio"
+            android:layout_width="378dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Consumo medio:"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +74,8 @@
                 android:id="@+id/Add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add" />
+                android:text="Add"
+                android:padding="10dp"/>
 
             <Space
                 android:layout_width="50dp"
@@ -74,19 +85,10 @@
                 android:id="@+id/OpenGraf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="grafic" />
+                android:text="grafic"
+                android:padding="10dp"/>
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/txtConsMedio"
-            android:layout_width="378dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:text="Consumo medio:"
-            android:textColor="@color/colorBlack"
-            android:textSize="18sp" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/fuelMap"
