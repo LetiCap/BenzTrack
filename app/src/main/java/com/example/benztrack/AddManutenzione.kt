@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.LineChart
@@ -29,6 +30,10 @@ class AddManutenzione : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val costoAssicurazione = view.findViewById<EditText>(R.id.CostoManutenzione)
         val btnAdd = view.findViewById<Button>(R.id.addMaintenance)
+        val selectedVehicleHome = arguments?.getString("data")
+        val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
+
+        txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
 
         lineChart = view.findViewById(R.id.linechart)
         lineChart.description.isEnabled = false

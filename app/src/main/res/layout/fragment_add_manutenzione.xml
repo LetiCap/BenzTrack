@@ -22,6 +22,12 @@
             android:hint="Spent on maintenance..."
             android:ems="10"
             android:inputType="numberDecimal" />
+        <TextView
+            android:id="@+id/txtVehicle"
+            android:layout_width="390dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/addMaintenance"

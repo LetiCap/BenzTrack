@@ -1,6 +1,8 @@
 package com.example.benztrack
 
 import DatabaseApp
+import android.R.id.message
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -11,9 +13,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -21,8 +21,11 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 
+
 class HomeFragment : Fragment() {
+
     lateinit var pieChart: PieChart
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +53,9 @@ class HomeFragment : Fragment() {
     private fun populateVehicle(spinner: Spinner, database: DatabaseApp) {
         val lista: MutableList<String> = mutableListOf()
         lista.add(0, "Select vehicle")
+        lista.add(1, "Lucerne")
+        lista.add(2, "Buick")
+
         val dataFromTable = database.getDataColumnString("model", "CarsTable")
 
         // Aggiungi i dati alla lista
@@ -75,6 +81,7 @@ class HomeFragment : Fragment() {
 
                 if (position > 0) {
                     // Chiama la funzione Grafic solo quando un veicolo è selezionato (non il placeholder)
+                    (activity as MainActivity).setSelectedVehicle(selectedVehicle)
                     updateGraphWithDatabaseValues(database)
                 }
 
@@ -91,6 +98,8 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+
 
     private fun setupInitialGraph() {
         pieChart.setUsePercentValues(false)
@@ -215,4 +224,5 @@ class HomeFragment : Fragment() {
         // Refreshing the chart
         pieChart.invalidate()
     }
+
 }

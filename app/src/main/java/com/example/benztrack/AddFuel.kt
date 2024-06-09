@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -70,6 +71,10 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val FuelCost = view.findViewById<EditText>(R.id.FuelCost)
         val CurrentKm = view.findViewById<EditText>(R.id.CurrentKm)
         val btnAdd = view.findViewById<Button>(R.id.Add)
+        val selectedVehicleHome = arguments?.getString("data")
+        val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
+
+        txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
         //  lineChart = view.findViewById(R.id.linechart)
 
         val database = DatabaseApp(requireContext())

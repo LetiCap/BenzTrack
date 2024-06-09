@@ -96,21 +96,22 @@ class AddingCarFragment : Fragment() {
         lista.add(0, "Select  $item")
 
 
-        val dataFromTable = database.getAllData(tabella)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val dataFromTable = database.getAllData(tabella)
 
-        // Aggiungi i dati alla lista
-        lista.addAll(dataFromTable)
+            // Aggiungi i dati alla lista
+            lista.addAll(dataFromTable)
 
-        withContext(Dispatchers.Main) {
-            val adapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                lista
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
+            withContext(Dispatchers.Main) {
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    lista
+                )
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = adapter
+            }
         }
-
     }
 
     private fun createItemSelectedListener(

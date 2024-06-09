@@ -1,13 +1,13 @@
 package com.example.benztrack
 
 import DatabaseApp
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.LineChart
@@ -24,10 +24,19 @@ class AddBollo : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_bollo, container, false)
+
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val selectedVehicleHome = arguments?.getString("data")
+        val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
+
+        txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
+
         val costoBollo = view.findViewById<EditText>(R.id.CostoBollo)
         val costoAssicurazione = view.findViewById<EditText>(R.id.CostoAssicurazione)
         val btnAdd = view.findViewById<Button>(R.id.Add)
@@ -42,6 +51,7 @@ class AddBollo : Fragment() {
         val initialEntriesB = getDataFromDatabase(database, tableName, "bollo")
         val initialEntriesA = getDataFromDatabase(database, tableName, "assicurazione")
         updateLineChart(initialEntriesB, initialEntriesA)
+
 
         btnAdd.setOnClickListener {
             val costoString = costoBollo.text.toString()

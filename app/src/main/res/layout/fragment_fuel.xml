@@ -37,12 +37,20 @@
             android:id="@+id/CurrentKm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
             android:layout_marginLeft="50dp"
+            android:layout_marginTop="35dp"
             android:layout_marginRight="50dp"
             android:ems="10"
             android:hint="Current Km..."
             android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/txtVehicle"
+            android:layout_width="390dp"
+            android:layout_height="wrap_content"
+
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/Add"
