@@ -73,11 +73,18 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
         val txtConsMedio = view.findViewById<TextView>(R.id.txtConsMedio)
 
+        if (selectedVehicleHome == null) {
+            Toast.makeText(requireContext(), "Nessun veicolo selezionato", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
         //  lineChart = view.findViewById(R.id.linechart)
 
         val database = DatabaseApp(requireContext())
-        val tableName = "t123"
+        val tableName: String = selectedVehicleHome.toString()
+
+
 
         // val datidaldatabase=getDataFromDatabase(database, tableName)
         //  updateLineChart(datidaldatabase)
