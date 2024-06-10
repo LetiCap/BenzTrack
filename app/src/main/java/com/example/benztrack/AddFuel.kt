@@ -86,6 +86,9 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val database = DatabaseApp(requireContext())
         val tableName: String = selectedVehicleHome.toString()
 
+        val averageConsumption = calculateAverageConsumption(database, tableName)
+        txtConsMedio.text = "Average consumation: $averageConsumption km/l"
+
 
 
         // val datidaldatabase=getDataFromDatabase(database, tableName)
@@ -108,8 +111,6 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 database.insertValueforCar("KM", tableName, KmDouble)
                 //  val newEntries = getDataFromDatabase(database, tableName)
                 //     updateLineChart(newEntries)
-                val averageConsumption = calculateAverageConsumption(database, tableName)
-                txtConsMedio.text = "Average consumation: $averageConsumption km/l"
 
                 /*val newEntries = getDataFromDatabase(database, tableName)
                 updateLineChart(newEntries)*/
