@@ -3,6 +3,7 @@ package com.example.benztrack
 import DatabaseApp
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -69,6 +70,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val FuelCost = view.findViewById<EditText>(R.id.FuelCost)
         val CurrentKm = view.findViewById<EditText>(R.id.CurrentKm)
         val btnAdd = view.findViewById<Button>(R.id.Add)
+        val btnGraf = view.findViewById<Button>(R.id.OpenGraf)
         val selectedVehicleHome = arguments?.getString("data")
         val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
         val txtConsMedio = view.findViewById<TextView>(R.id.txtConsMedio)
@@ -91,11 +93,12 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
 
 
-
         btnAdd.setOnClickListener {
             val SpentString = SpentOnFuel.text.toString()
             val FuelString = FuelCost.text.toString()
             val KmString = CurrentKm.text.toString()
+
+
             if (SpentString.isNotEmpty() && FuelString.isNotEmpty() && KmString.isNotEmpty()) {
                 val SpentDouble = SpentString.toDouble()
                 val FuelDouble = FuelString.toDouble()
@@ -113,14 +116,17 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
 
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Inserire il costo della benzina",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+                Toast.makeText(requireContext(),"Inserire i dati mancanti",Toast.LENGTH_SHORT).show()
             }
         }
+
+        btnGraf.setOnClickListener{
+
+            Toast.makeText(requireContext(), "Hai premuto il pulsante per visualizzare i grafici", Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireContext(), FuelGraphs::class.java)
+            startActivity(intent)
+        }
+
     }
     private fun calculateAverageConsumption(database: DatabaseApp, tableName: String): Double {
         val totalFuel = database.getSumColumn("benzina", tableName)
