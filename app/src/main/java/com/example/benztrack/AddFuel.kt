@@ -106,7 +106,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 //  val newEntries = getDataFromDatabase(database, tableName)
                 //     updateLineChart(newEntries)
                 val averageConsumption = calculateAverageConsumption(database, tableName)
-                txtConsMedio.text = "Average consumption: $averageConsumption km/l"
+                txtConsMedio.text = "Average consumation: $averageConsumption km/l"
 
                 /*val newEntries = getDataFromDatabase(database, tableName)
                 updateLineChart(newEntries)*/
