@@ -14,7 +14,7 @@ class FuelGraphs : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_fuel_graphs)
 
-        // attiva pulsate home (freccina) oer tornare al fragment precedente l'apertura dell'activity
+        // attiva pulsate home (freccina) per tornare al fragment precedente l'apertura dell'activity
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Gestione degli insets per evitare sovrapposizioni con la barra delle azioni
