@@ -6,38 +6,44 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 
 class FuelGraphs : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_fuel_graphs)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        // attiva pulsate home (freccina) oer tornare al fragment precedente l'apertura dell'activity
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // Gestione degli insets per evitare sovrapposizioni con la barra delle azioni
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBarsInsets.left, systemBarsInsets.top, systemBarsInsets.right, systemBarsInsets.bottom)
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(WindowInsetsCompat.Type.systemBars(), systemBarsInsets)
+                .build()
         }
-
-
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                val fragmentManager = supportFragmentManager
-                val fragment = fragmentManager.findFragmentByTag("AddFuel")
-                if (fragment == null) {
-                    // Il fragment AddFuel non è presente nello stack, aggiungilo
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.add_fuel, AddFuel(), "AddFuel")
-                        .addToBackStack(null)
-                        .commit()
-                } else {
-                    // Il fragment AddFuel è già presente nello stack, torna indietro
-                    fragmentManager.popBackStack()
-                }
+                handleBackNavigation()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun handleBackNavigation() {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.backStackEntryCount > 1) {
+            fragmentManager.popBackStack()
+        } else {
+            finish()
+        }
+    }
+
 }

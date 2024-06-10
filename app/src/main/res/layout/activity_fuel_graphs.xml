@@ -7,15 +7,4 @@
     android:layout_height="match_parent"
     tools:context=".FuelGraphs">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="40dp"
-        app:navigationIcon="@drawable/baseline_arrow_back_24" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
