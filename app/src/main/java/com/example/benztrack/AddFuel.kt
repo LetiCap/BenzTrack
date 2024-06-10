@@ -43,7 +43,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var rootView: View
-    lateinit var lineChart: LineChart
+
 
     //codice per la richiesta del permesso
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
@@ -70,6 +70,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val FuelCost = view.findViewById<EditText>(R.id.FuelCost)
         val CurrentKm = view.findViewById<EditText>(R.id.CurrentKm)
         val btnAdd = view.findViewById<Button>(R.id.Add)
+
         val btnGraf = view.findViewById<Button>(R.id.OpenGraf)
         val selectedVehicleHome = arguments?.getString("data")
         val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
@@ -81,15 +82,14 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         }
 
         txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
-        //  lineChart = view.findViewById(R.id.linechart)
+
 
         val database = DatabaseApp(requireContext())
         val tableName: String = selectedVehicleHome.toString()
 
 
 
-        // val datidaldatabase=getDataFromDatabase(database, tableName)
-        //  updateLineChart(datidaldatabase)
+
 
 
 
@@ -106,13 +106,11 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 database.insertValueforCar("benzina", tableName, SpentDouble)
                 database.insertValueforCar("CostoBenzina", tableName, FuelDouble)
                 database.insertValueforCar("KM", tableName, KmDouble)
-                //  val newEntries = getDataFromDatabase(database, tableName)
-                //     updateLineChart(newEntries)
+
                 val averageConsumption = calculateAverageConsumption(database, tableName)
                 txtConsMedio.text = "Average consumation: $averageConsumption km/l"
 
-                /*val newEntries = getDataFromDatabase(database, tableName)
-                updateLineChart(newEntries)*/
+
 
 
             } else {
@@ -124,6 +122,8 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
             Toast.makeText(requireContext(), "Hai premuto il pulsante per visualizzare i grafici", Toast.LENGTH_SHORT).show()
             val intent = Intent(requireContext(), FuelGraphs::class.java)
+
+            intent.putExtra("veicolo selezionato", tableName)
             startActivity(intent)
         }
 
@@ -133,33 +133,10 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val totalKm = database.getSumColumn("KM", tableName)
         return if (totalFuel > 0) totalKm / totalFuel else 0.0
     }
-    private fun getDataFromDatabase(
-        database: DatabaseApp,
-        tableName: String
-    ): ArrayList<Entry> {
-        val entries = ArrayList<Entry>()
-
-        val dataFromDatabase = database.getDataColumnDouble("benzina", tableName)
-
-        // Itera sui dati ottenuti dal database e crea oggetti Entry
-        for ((index, value) in dataFromDatabase.withIndex()) {
-            val entry = Entry(index.toFloat(), value.toFloat())
-            entries.add(entry)
-        }
-
-        return entries
-    }
 
 
-    private fun updateLineChart(entries: ArrayList<Entry>) {
-        val dataSet = LineDataSet(entries, "BENZINA")
-        val lineData = LineData(dataSet)
-        lineChart.data = lineData
 
-        // Configura l'asse x per visualizzare le date come etichette personalizzate
 
-        lineChart.invalidate()
-    }
 
     private fun currentLocation(rootView: View) {
 
