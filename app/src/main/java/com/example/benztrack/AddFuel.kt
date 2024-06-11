@@ -18,24 +18,15 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-
 
 class AddFuel : Fragment(), OnMapReadyCallback {
 
@@ -43,11 +34,10 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var rootView: View
-
+    private val markers = mutableListOf<Marker>()
 
     //codice per la richiesta del permesso
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,15 +45,14 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     ): View? {
         rootView = inflater.inflate(R.layout.fragment_fuel, container, false)
 
-
-        currentLocation(rootView)
+        // Initialize the MapView
 
         map(rootView, savedInstanceState)
-
+        // Request location permission
+        requestLocationPermission()
 
         return rootView
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val SpentOnFuel = view.findViewById<EditText>(R.id.AmountSpentOnFuel)
@@ -92,7 +81,6 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
 
 
-
         btnAdd.setOnClickListener {
             val SpentString = SpentOnFuel.text.toString()
             val FuelString = FuelCost.text.toString()
@@ -112,17 +100,14 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
 
 
-
             } else {
                 Toast.makeText(requireContext(),"Inserire i dati mancanti",Toast.LENGTH_SHORT).show()
             }
         }
 
         btnGraf.setOnClickListener{
-
             Toast.makeText(requireContext(), "Hai premuto il pulsante per visualizzare i grafici", Toast.LENGTH_SHORT).show()
             val intent = Intent(requireContext(), FuelGraphs::class.java)
-
             intent.putExtra("veicolo selezionato", tableName)
             startActivity(intent)
         }
@@ -136,46 +121,20 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
 
 
-
-
-    private fun currentLocation(rootView: View) {
-
-        val currentPosition = rootView.findViewById<FloatingActionButton>(R.id.currentPosition)
-        currentPosition.setOnClickListener {
-            // Controlla se il permesso è stato già concesso
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                // Il permesso è già stato concesso, ottieni la posizione attuale
-                getCurrentLocation()
-                //createLocationRequest()
-            } else {
-                // Il permesso non è stato concesso, richiedilo all'utente
-                requestPermissions(
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    LOCATION_PERMISSION_REQUEST_CODE
-                )
-            }
-        }
-    }
-
     private fun map(rootView: View, savedInstanceState: Bundle?) {
         mapView = rootView.findViewById(R.id.fuelMap)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
     }
-
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-
         // Inizializza il client per ottenere la posizione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        //createLocationRequest()
-        // Richiedi il permesso di accesso alla posizione
-        requestLocationPermission()
+        // Richiedi aggiornamento location
+        requestLocationUpdates()
     }
+
+
 
     // Funzione per richiedere il permesso di accesso alla posizione
     private fun requestLocationPermission() {
@@ -189,10 +148,6 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 LOCATION_PERMISSION_REQUEST_CODE
             )
-        } else {
-            // Se il permesso è già stato concesso, ottieni la posizione attuale
-            getCurrentLocation()
-            //createLocationRequest()
         }
     }
 
@@ -212,22 +167,41 @@ class AddFuel : Fragment(), OnMapReadyCallback {
             return
         }
 
+        Log.d("AddFuel", "getCurrentLocation() called")
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let {
                 val latitude = location.latitude
                 val longitude = location.longitude
                 saveLocationData(latitude, longitude)
-
+                Log.d("AddFuel", "Current location: $latitude, $longitude")
                 // Aggiungi un marker sulla mappa nella posizione attuale
                 val currentPosition = LatLng(latitude, longitude)
-                googleMap.addMarker(
-                    MarkerOptions().position(currentPosition).title("La mia posizione attuale")
+                val marker =googleMap.addMarker(
+                    MarkerOptions()
+                        .position(currentPosition)
+                        .title("My Current Position")
                 )
+
+                // Abilita la geolocalizzazione sulla mappa
+                requestLocationUpdates()
 
                 // Muovi la camera per centrare il marker
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 13f))
+                if (marker != null) {
+                    markers.add(marker)
+                }
             }
+
         }
+    }
+
+    private fun saveLocationData(latitude: Double, longitude: Double) {
+        val sharedPreferences =
+            requireContext().getSharedPreferences("location_data", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putFloat("latitude", latitude.toFloat())
+        editor.putFloat("longitude", longitude.toFloat())
+        editor.apply()
     }
 
 
@@ -241,7 +215,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Se il permesso è stato concesso, ottieni la posizione attuale
                 getCurrentLocation()
-                //createLocationRequest()
+
             } else {
                 // Permesso negato, mostra un messaggio all'utente
                 Toast.makeText(
@@ -253,27 +227,26 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun saveLocationData(latitude: Double, longitude: Double) {
-        val sharedPreferences =
-            requireContext().getSharedPreferences("location_data", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putFloat("latitude", latitude.toFloat())
-        editor.putFloat("longitude", longitude.toFloat())
-        editor.apply()
+
+
+    private fun requestLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            googleMap.isMyLocationEnabled = true
+        }
     }
 
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        if (this::googleMap.isInitialized) {
-            //startLocationUpdates()
-        }
     }
 
     override fun onPause() {
         super.onPause()
         mapView.onPause()
-        //stopLocationUpdates()
     }
 
     override fun onDestroy() {
