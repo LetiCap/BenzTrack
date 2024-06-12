@@ -1,7 +1,7 @@
 package com.example.benztrack
 
 
-import DatabaseApp
+
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -20,6 +20,7 @@ class FuelGraphs : AppCompatActivity() {
 
     lateinit var lineChart1: LineChart
     lateinit var lineChart2: LineChart
+    lateinit var lineChart3: LineChart
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,8 +47,10 @@ class FuelGraphs : AppCompatActivity() {
 
         lineChart1 = findViewById(R.id.linechart)
         lineChart2 = findViewById(R.id.linechart2)
+        lineChart3 = findViewById(R.id.linechart3)
         lineChart1.description.isEnabled = false
         lineChart2.description.isEnabled = false
+        lineChart3.description.isEnabled = false
         val database = DatabaseApp(this)
 
         val tableName = intent.getStringExtra("veicolo selezionato")
@@ -57,8 +60,10 @@ class FuelGraphs : AppCompatActivity() {
 
             val dataFromDatabaseB = getDataFromDatabase(database, tableName, "benzina")
             val dataFromDatabaseC = getDataFromDatabase(database, tableName, "CostoBenzina")
+            val dataFromDatabaseD = getDataFromDatabase(database, tableName, "consumoCO2")
             updateLineChart(dataFromDatabaseB,"Money for fuel",lineChart1)
             updateLineChart(dataFromDatabaseC,"Fuel cost per Litre",lineChart2)
+            updateLineChart(dataFromDatabaseD,"CO2 consumption",lineChart3)
         }
     }
 

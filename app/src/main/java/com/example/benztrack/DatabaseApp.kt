@@ -1,3 +1,4 @@
+package com.example.benztrack
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -36,6 +37,7 @@ class DatabaseApp(val context: Context) :
         private const val COLUMN_LON = "longitudine"
         private const val COLUMN_KM = "KM"
         private const val COLUMN_DATE = "data"
+        private const val COLUMN_CONSUME = "consumoCO2"
         private const val COLUMN_CO2 ="CO2"
     }
 
@@ -138,6 +140,31 @@ class DatabaseApp(val context: Context) :
         db.close()
     }
 
+    fun insertLocationForVehicle(tableName: String, latitude: Double, longitude: Double) {
+        val db = this.writableDatabase
+        val data = ContentValues()
+        data.put(COLUMN_LAT, latitude)
+        data.put(COLUMN_LON, longitude)
+        data.put(COLUMN_DATE, getCurrentDateTime()) // Inserisci la data formattata come stringa
+        db.insert("\"$tableName\"", null, data)
+        db.close()
+    }
+
+    fun getLocationsForVehicle(tableName: String): List<Pair<Double, Double>> {
+        val locations = mutableListOf<Pair<Double, Double>>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_LAT, $COLUMN_LON FROM \"$tableName\" WHERE $COLUMN_LAT IS NOT NULL AND $COLUMN_LON IS NOT NULL", null)
+
+        cursor.use {
+            while (it.moveToNext()) {
+                val latitude = it.getDouble(it.getColumnIndexOrThrow(COLUMN_LAT))
+                val longitude = it.getDouble(it.getColumnIndexOrThrow(COLUMN_LON))
+                locations.add(Pair(latitude, longitude))
+            }
+        }
+        return locations
+    }
+
     private fun getCurrentDateTime(): String {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) // Formato della data e dell'ora
         val date = Date()
@@ -154,6 +181,7 @@ class DatabaseApp(val context: Context) :
                     "$COLUMN_SPEND_ON_FUEL REAL, " +
                     "$COLUMN_FUEL_COST REAL, " +
                     "$COLUMN_MAINTENANCE REAL, " +
+                    "$COLUMN_CONSUME REAL, " +
                     "$COLUMN_KM REAL, " +
                     "$COLUMN_LAT TEXT, " +
                     "$COLUMN_LON TEXT, " +

@@ -1,6 +1,4 @@
 package com.example.benztrack
-
-import DatabaseApp
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -34,6 +32,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var googleMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var rootView: View
+    private lateinit var databaseApp: DatabaseApp
     private val markers = mutableListOf<Marker>()
 
     //codice per la richiesta del permesso
@@ -72,14 +71,8 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
         txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
 
-
-        val database = DatabaseApp(requireContext())
+        databaseApp = DatabaseApp(requireContext())
         val tableName: String = selectedVehicleHome.toString()
-
-
-
-
-
 
         btnAdd.setOnClickListener {
             val SpentString = SpentOnFuel.text.toString()
@@ -91,21 +84,18 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 val SpentDouble = SpentString.toDouble()
                 val FuelDouble = FuelString.toDouble()
                 val KmDouble = KmString.toDouble()
-                database.insertValueforCar("benzina", tableName, SpentDouble)
-                database.insertValueforCar("CostoBenzina", tableName, FuelDouble)
-                database.insertValueforCar("KM", tableName, KmDouble)
+                databaseApp.insertValueforCar("benzina", tableName, SpentDouble)
+                databaseApp.insertValueforCar("CostoBenzina", tableName, FuelDouble)
+                databaseApp.insertValueforCar("KM", tableName, KmDouble)
 
-                val averageConsumption = calculateAverageConsumption(database, tableName)
-                txtConsMedio.text = "Average consumation: $averageConsumption km/l"
-
-
-
+                val averageConsumption = calculateAverageConsumption(databaseApp, tableName)
+                txtConsMedio.text = "Average consumption: $averageConsumption km/l"
             } else {
-                Toast.makeText(requireContext(),"Inserire i dati mancanti",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Inserire i dati mancanti", Toast.LENGTH_SHORT).show()
             }
         }
 
-        btnGraf.setOnClickListener{
+        btnGraf.setOnClickListener {
             Toast.makeText(requireContext(), "Hai premuto il pulsante per visualizzare i grafici", Toast.LENGTH_SHORT).show()
             val intent = Intent(requireContext(), FuelGraphs::class.java)
             intent.putExtra("veicolo selezionato", tableName)
@@ -132,9 +122,14 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         // Richiedi aggiornamento location
         requestLocationUpdates()
+        // Load and display saved markers
+        loadSavedMarkers()
+
+        // Set long press listener to add a marker
+        googleMap.setOnMapLongClickListener { latLng ->
+            addMarkerToMap(latLng)
+        }
     }
-
-
 
     // Funzione per richiedere il permesso di accesso alla posizione
     private fun requestLocationPermission() {
@@ -167,43 +162,64 @@ class AddFuel : Fragment(), OnMapReadyCallback {
             return
         }
 
-        Log.d("AddFuel", "getCurrentLocation() called")
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let {
                 val latitude = location.latitude
                 val longitude = location.longitude
+                Log.d("caa","$latitude $longitude")
+
                 saveLocationData(latitude, longitude)
-                Log.d("AddFuel", "Current location: $latitude, $longitude")
-                // Aggiungi un marker sulla mappa nella posizione attuale
-                val currentPosition = LatLng(latitude, longitude)
-                val marker =googleMap.addMarker(
+            }
+        }
+    }
+
+
+    private fun saveLocationData(latitude: Double, longitude: Double) {
+        // Save location to the database
+        val selectedVehicleHome = arguments?.getString("data")
+        selectedVehicleHome?.let { vehicleName ->
+            databaseApp.insertLocationForVehicle(vehicleName, latitude, longitude)
+        }
+    }
+
+    private fun loadSavedMarkers() {
+        val selectedVehicleHome = arguments?.getString("data")
+        selectedVehicleHome?.let { vehicleName ->
+            val locations = databaseApp.getLocationsForVehicle(vehicleName)
+            Log.d("fsa","$locations")
+            for (location in locations) {
+                val latitude = location.first
+                val longitude = location.second
+                val marker = googleMap.addMarker(
                     MarkerOptions()
-                        .position(currentPosition)
-                        .title("My Current Position")
+                        .position(LatLng(latitude, longitude))
+                        .title("Previous Location")
                 )
-
-                // Abilita la geolocalizzazione sulla mappa
-                requestLocationUpdates()
-
-                // Muovi la camera per centrare il marker
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 13f))
                 if (marker != null) {
                     markers.add(marker)
                 }
             }
-
         }
     }
 
-    private fun saveLocationData(latitude: Double, longitude: Double) {
-        val sharedPreferences =
-            requireContext().getSharedPreferences("location_data", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putFloat("latitude", latitude.toFloat())
-        editor.putFloat("longitude", longitude.toFloat())
-        editor.apply()
-    }
+    private fun addMarkerToMap(latLng: LatLng) {
 
+        val marker = googleMap.addMarker(
+            MarkerOptions()
+                .position(latLng)
+                .title("New Marker")
+        )
+        // Add the marker to the list for persistence
+
+        if (marker!=null) {
+            markers.add(marker)
+        }
+        // Save marker to the database
+        val selectedVehicleHome = arguments?.getString("data")
+        selectedVehicleHome?.let { vehicleName ->
+            databaseApp.insertLocationForVehicle(vehicleName, latLng.latitude, latLng.longitude)
+        }
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

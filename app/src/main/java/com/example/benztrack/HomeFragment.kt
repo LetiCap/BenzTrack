@@ -1,6 +1,6 @@
 package com.example.benztrack
 
-import DatabaseApp
+
 import android.R.id.message
 import android.content.Intent
 import android.graphics.Color
@@ -136,13 +136,14 @@ class HomeFragment : Fragment() {
 
         // Creating array list and adding initial data to it (0 values)
         val entries: ArrayList<PieEntry> = ArrayList()
-        entries.add(PieEntry(10f, "Bollo"))
-        entries.add(PieEntry(10f, "Insurance"))
-        entries.add(PieEntry(10f, "Fuel"))
-        entries.add(PieEntry(10f, "Maintenance"))
+        entries.add(PieEntry(0.01f, "Bollo"))
+        entries.add(PieEntry(0.01f, "Insurance"))
+        entries.add(PieEntry(0.01f, "Fuel"))
+        entries.add(PieEntry(0.01f, "Maintenance"))
 
         // Setting pie data set
         val dataSet = PieDataSet(entries, "")
+
 
         dataSet.setDrawIcons(true)
         dataSet.sliceSpace = 3f
@@ -185,7 +186,8 @@ class HomeFragment : Fragment() {
         Log.d("HomeFragment", "Bollo: $bollo, Insurance: $assi, Fuel: $benz, yMaintenance: $manut")
 
         // Adding entries, initializing to 0 if needed
-        entries.add(PieEntry(if (bollo == 0f) 0.01f else bollo, "Bollo"))
+
+        entries.add(PieEntry(if (bollo == 0f) 0.01f else bollo , "Bollo"))
         entries.add(PieEntry(if (assi == 0f) 0.01f else assi, "Insurance"))
         entries.add(PieEntry(if (benz == 0f) 0.01f else benz, "Fuel"))
         entries.add(PieEntry(if (benz == 0f) 0.01f else manut, "Maintenance"))
@@ -209,10 +211,10 @@ class HomeFragment : Fragment() {
 
         // Setting pie data
         val data = PieData(dataSet)
-        data.setValueFormatter(PercentFormatter(pieChart)) // This will format values as percentages
-        // Imposta il valore del testo su null per rimuovere
 
-        // This will format values as percentages
+
+
+
         // Imposta il valore del testo su null per rimuovere la scritta sugli spicchi
 
         data.setValueTextSize(15f)
