@@ -1,5 +1,6 @@
 package com.example.benztrack
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +86,7 @@ class CarExpandableListAdapter(
         convertViewGroup.setOnClickListener {
             val model = vehicleModel[groupPosition]
             Toast.makeText(context, "Hai selezionato il modello: $model", Toast.LENGTH_SHORT).show()
+
             database.insertCar(model, CO2)
             database.createTableInfoVehicle(model)
         }

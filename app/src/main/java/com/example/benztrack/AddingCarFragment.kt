@@ -206,7 +206,7 @@ class AddingCarFragment : Fragment() {
                 val details = mutableListOf<Pair<String, String>>()
 
                 val model = vehicleJsonObject.getString("model")
-                // Ottieni l'ID del veicolo
+                // Ottieni modello del veicolo
                 vehicleModel.add(model.toString())
 
 
@@ -227,8 +227,8 @@ class AddingCarFragment : Fragment() {
             description.toString()
         }
         val Co2String = CO2.text.toString()
-        val CO2 = Co2String.toDouble()
-        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleModel,CO2)
+        val CO2Double = Co2String.toDouble()
+        carExpandableListAdapter = CarExpandableListAdapter(requireContext(), vehicleDescriptions, vehicleDetailsList, vehicleModel,CO2Double)
         expandableListView.setAdapter(carExpandableListAdapter)
         btnAdd.visibility = View.INVISIBLE
         expandableListView.visibility = View.VISIBLE

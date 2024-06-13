@@ -33,6 +33,11 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var rootView: View
     private lateinit var databaseApp: DatabaseApp
+    private  var lastKM: Double? = 0.0
+
+    private  var KmDouble: Double = 0.0
+    private var selectedVehicleHome: String? = null
+
     private val markers = mutableListOf<Marker>()
 
     //codice per la richiesta del permesso
@@ -60,11 +65,12 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val btnAdd = view.findViewById<Button>(R.id.Add)
 
         val btnGraf = view.findViewById<Button>(R.id.OpenGraf)
-        val selectedVehicleHome = arguments?.getString("data")
+        selectedVehicleHome = arguments?.getString("data")
         val txtVehicle = view.findViewById<TextView>(R.id.txtVehicle)
         val txtConsMedio = view.findViewById<TextView>(R.id.txtConsMedio)
 
         if (selectedVehicleHome == null) {
+
             Toast.makeText(requireContext(), "Nessun veicolo selezionato", Toast.LENGTH_SHORT).show()
             return
         }
@@ -72,9 +78,13 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         txtVehicle.text = "Veicolo selezionato: $selectedVehicleHome"
 
         databaseApp = DatabaseApp(requireContext())
+
         val tableName: String = selectedVehicleHome.toString()
 
+
+
         btnAdd.setOnClickListener {
+
             val SpentString = SpentOnFuel.text.toString()
             val FuelString = FuelCost.text.toString()
             val KmString = CurrentKm.text.toString()
@@ -83,13 +93,16 @@ class AddFuel : Fragment(), OnMapReadyCallback {
             if (SpentString.isNotEmpty() && FuelString.isNotEmpty() && KmString.isNotEmpty()) {
                 val SpentDouble = SpentString.toDouble()
                 val FuelDouble = FuelString.toDouble()
-                val KmDouble = KmString.toDouble()
+                KmDouble = KmString.toDouble()
+                lastKM= databaseApp.getLastKmValue( tableName)
+                if(lastKM==null) lastKM=0.0
+
                 databaseApp.insertValueforCar("benzina", tableName, SpentDouble)
                 databaseApp.insertValueforCar("CostoBenzina", tableName, FuelDouble)
                 databaseApp.insertValueforCar("KM", tableName, KmDouble)
 
-                val averageConsumption = calculateAverageConsumption(databaseApp, tableName)
-                txtConsMedio.text = "Average consumption: $averageConsumption km/l"
+                val averageConsumption = calculateAverageConsumption()
+                txtConsMedio.text = "Average consumption CO2: $averageConsumption "
             } else {
                 Toast.makeText(requireContext(), "Inserire i dati mancanti", Toast.LENGTH_SHORT).show()
             }
@@ -103,10 +116,16 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         }
 
     }
-    private fun calculateAverageConsumption(database: DatabaseApp, tableName: String): Double {
-        val totalFuel = database.getSumColumn("benzina", tableName)
-        val totalKm = database.getSumColumn("KM", tableName)
-        return if (totalFuel > 0) totalKm / totalFuel else 0.0
+    private fun calculateAverageConsumption(): Double {
+        var consumoCo2=( KmDouble- lastKM!!) * databaseApp.getCO2ofVeichle( selectedVehicleHome!!)
+        databaseApp.insertValueforCar("consumoCO2", selectedVehicleHome.toString(), consumoCo2)
+
+       // val lastKm = lastKM ?: KmDouble // Use currenKm if lastKM is null
+        return consumoCo2
+
+
+
+
     }
 
 

@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
 class DatabaseApp(val context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -49,7 +50,9 @@ class DatabaseApp(val context: Context) :
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_MAKES($COLUMN_MAKES TEXT PRIMARY KEY)")
             db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_YEARS($COLUMN_YEARS TEXT PRIMARY KEY)")
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS($COLUMN_MODEL TEXT PRIMARY KEY,"+ "$COLUMN_CO2 REAL)")
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS $TABLE_LISTOFCARS ($COLUMN_MODEL TEXT PRIMARY KEY, $COLUMN_CO2 REAL)")
+
 
 
 
@@ -257,23 +260,47 @@ class DatabaseApp(val context: Context) :
         return dataList
     }
 
-    fun getDataWithDateColumn(dato: String,date:String, tableName: String): ArrayList<Pair<Int, String>> {
-        val dataList = ArrayList<Pair<Int, String>>()
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT \"$dato\", \"$date\" FROM \"$tableName\"", null)
 
-        cursor.use {
-            while (it.moveToNext()) {
-                val Value = it.getInt(0)
-                val date = it.getString(1)
-                dataList.add(Pair(Value, date))
+    fun getCO2ofVeichle (veichle:String):Double{
+        val db = readableDatabase
+
+        val query= "SELECT $COLUMN_CO2 FROM $TABLE_LISTOFCARS WHERE $COLUMN_MODEL= ? "
+
+        val cursor = db.rawQuery(query, arrayOf(veichle))
+        var co2 = 0.0 // Default value in case no CO2 value is found
+
+        cursor.use { // Use `use` to close the cursor automatically after use
+            if (it.moveToFirst()) {
+                co2 = it.getDouble(it.getColumnIndexOrThrow(COLUMN_CO2))
+
             }
         }
 
-        Log.d("DatabaseApp", "Data with date from $tableName: $dataList")
-
-        return dataList
+        db.close()
+        return co2
     }
+
+
+
+
+    fun getLastKmValue(tableName: String): Double? {
+        val query = "SELECT $COLUMN_KM FROM $tableName "
+        var lastKm: Double? = null
+
+        val db = readableDatabase
+        val cursor = db.rawQuery(query, null)
+
+        cursor.use { // Usa il blocco use per assicurare la chiusura automatica del cursore
+            if (cursor.moveToLast()) {
+                lastKm = cursor.getDouble(cursor.getColumnIndexOrThrow("KM"))
+            }
+        } // Il cursore verrà chiuso automaticamente qui
+
+        db.close()
+
+        return lastKm
+    }
+
 
 
     fun getSumColumn(columnName:String, tableName: String): Double {
