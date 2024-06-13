@@ -14,8 +14,9 @@ class CarExpandableListAdapter(
     private val vehicleDescriptions: List<String>,
     private val vehicleDetails: List<List<Pair<String, String>>>,
     private val vehicleModel: List<String>,
-    private val CO2:Double
+    private val CO2: Double
 ) : BaseExpandableListAdapter() {
+
     private val database: DatabaseApp = DatabaseApp(context)
 
     override fun getGroup(groupPosition: Int): Any {
@@ -23,7 +24,7 @@ class CarExpandableListAdapter(
     }
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
-        return true // Indica che gli elementi figli non sono selezionabili
+        return true
     }
 
     override fun hasStableIds(): Boolean {
@@ -39,11 +40,10 @@ class CarExpandableListAdapter(
         var convertViewGroup = convertView
         if (convertViewGroup == null) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertViewGroup = inflater.inflate(android.R.layout.simple_expandable_list_item_1, null)
+            convertViewGroup = inflater.inflate(R.layout.list_item_vehicle, null)
         }
-        val textView = convertViewGroup!!.findViewById<TextView>(android.R.id.text1)
+        val textView = convertViewGroup!!.findViewById<TextView>(R.id.textTitle)
         textView.text = vehicleDescriptions[groupPosition]
-        textView.setTextColor(ContextCompat.getColor(context, android.R.color.white))
         convertViewGroup.setBackgroundColor(ContextCompat.getColor(context, R.color.colorDutchWhite))
         return convertViewGroup
     }
@@ -70,34 +70,27 @@ class CarExpandableListAdapter(
         var convertViewGroup = convertView
         if (convertViewGroup == null) {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertViewGroup = inflater.inflate(R.layout.list_item_vehicle, null)
+            convertViewGroup = inflater.inflate(R.layout.expandable_list_child_item, null)
         }
 
-        val details = vehicleDetails[groupPosition] // Otteniamo i dettagli corrispondenti al gruppo
-        val detail = details[childPosition] // Otteniamo il dettaglio specifico per questo elemento
+        val details = vehicleDetails[groupPosition]
+        val detail = details[childPosition]
 
+        val textTitleView = convertViewGroup!!.findViewById<TextView>(R.id.textTitle)
+        val textDetailsView = convertViewGroup.findViewById<TextView>(R.id.textDetails)
+        textTitleView.text = detail.first
+        textDetailsView.text = detail.second
+        convertViewGroup.visibility = View.VISIBLE
 
-
-            //  visualizziamo normalmente i dettagli
-            val textTitleView = convertViewGroup!!.findViewById<TextView>(R.id.textTitle)
-            textTitleView.text = "${detail.first}: ${detail.second}" // Visualizziamo chiave e valore
-            convertViewGroup.visibility = View.VISIBLE
-
-            // Aggiungiamo il listener di clic al convertViewGroup
-            convertViewGroup.setOnClickListener {
-                // Otteniamo l'ID
-                val model = vehicleModel[groupPosition]
-                Toast.makeText(context, "Hai selezionato il modello: $model", Toast.LENGTH_SHORT).show()
-                database.insertCar(model, CO2)
-                database.createTableInfoVehicle(model)
-
-            }
+        convertViewGroup.setOnClickListener {
+            val model = vehicleModel[groupPosition]
+            Toast.makeText(context, "Hai selezionato il modello: $model", Toast.LENGTH_SHORT).show()
+            database.insertCar(model, CO2)
+            database.createTableInfoVehicle(model)
+        }
 
         return convertViewGroup
     }
-
-
-
 
     override fun getGroupCount(): Int {
         return vehicleDescriptions.size

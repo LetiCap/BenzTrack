@@ -11,18 +11,12 @@
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black" />
+         />
 
     <!-- Altri dettagli o informazioni aggiuntive -->
-    <TextView
-        android:id="@+id/textDetails"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp" />
+
 
 </LinearLayout>
