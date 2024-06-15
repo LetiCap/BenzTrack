@@ -1,6 +1,7 @@
 package com.example.benztrack
 
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +12,21 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
     private var selectedVehicle: String? = null
+    private lateinit var notification: Notification
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Inizializzazione della classe Notification
+        notification = Notification(this)
+        notification.createNotificationChannel()
+
+        // Richiedi il permesso di notifica all'utente se non è già abilitato
+        if (!notification.areNotificationsEnabled()) {
+            showEnableNotificationsDialog()
+        }
+
 
 
         //cambio fragment a seconda del tasto selezionato
@@ -83,6 +95,20 @@ class MainActivity : AppCompatActivity() {
         selectedVehicle = vehicle
     }
 
+    private fun showEnableNotificationsDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Abilita Notifiche")
+            .setMessage("Per ricevere avvisi importanti, è necessario abilitare le notifiche.")
+            .setPositiveButton("Abilita") { dialog, _ ->
+                notification.requestNotificationPermission()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Annulla") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
 
 
 }

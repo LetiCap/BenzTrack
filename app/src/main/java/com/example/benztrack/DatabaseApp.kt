@@ -317,4 +317,23 @@ class DatabaseApp(val context: Context) :
     }
 
 
+    fun getLastConsumption(vehicleName: String): Double? {
+        val db = readableDatabase
+        val query = "SELECT $COLUMN_CONSUME FROM $vehicleName ORDER BY $COLUMN_DATE DESC LIMIT 1"
+        var lastConsumption: Double? = null
+
+        val cursor = db.rawQuery(query, null)
+        cursor.use {
+            if (it.moveToFirst()) {
+                lastConsumption = it.getDouble(it.getColumnIndexOrThrow(COLUMN_CONSUME))
+            }
+        }
+
+        db.close()
+        return lastConsumption
+    }
+
+
+
+
 }

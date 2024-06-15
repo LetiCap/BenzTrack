@@ -40,6 +40,9 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
     private val markers = mutableListOf<Marker>()
 
+    private lateinit var notification: Notification
+
+
     //codice per la richiesta del permesso
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
 
@@ -54,6 +57,10 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         map(rootView, savedInstanceState)
         // Request location permission
         requestLocationPermission()
+
+        notification = Notification(requireContext())
+        notification.createNotificationChannel()
+
 
         return rootView
     }
@@ -116,18 +123,42 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         }
 
     }
+/*
     private fun calculateAverageConsumption(): Double {
         var consumoCo2=( KmDouble- lastKM!!) * databaseApp.getCO2ofVeichle( selectedVehicleHome!!)
         databaseApp.insertValueforCar("consumoCO2", selectedVehicleHome.toString(), consumoCo2)
 
+        if (consumoCo2 > 200) {
+            notification.sendCO2WarningNotification(consumoCo2)
+        } else {
+            // Se il consumo è inferiore a 200, invia una notifica di elogio
+            notification.sendCO2PraiseNotification(consumoCo2)
+        }
        // val lastKm = lastKM ?: KmDouble // Use currenKm if lastKM is null
         return consumoCo2
-
-
-
-
     }
+    */
 
+
+    private fun calculateAverageConsumption(): Double {
+        val consumoCo2 = (KmDouble - lastKM!!) * databaseApp.getCO2ofVeichle(selectedVehicleHome!!)
+        databaseApp.insertValueforCar("consumoCO2", selectedVehicleHome.toString(), consumoCo2)
+
+        val lastConsumption = databaseApp.getLastConsumption(selectedVehicleHome!!)
+        val co2Difference = lastConsumption?.let {
+            consumoCo2 - it
+        } ?: 0.0
+
+        if (co2Difference < 0) {
+            // Se la differenza è negativa, invia una notifica di elogio
+            notification.sendCO2PraiseNotification(co2Difference)
+        } else {
+            // Altrimenti, invia una notifica di avviso
+            notification.sendCO2WarningNotification(co2Difference)
+        }
+
+        return consumoCo2
+    }
 
 
     private fun map(rootView: View, savedInstanceState: Bundle?) {
