@@ -156,9 +156,8 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         databaseApp.insertValueforCar("consumoCO2", selectedVehicleHome.toString(), consumoCo2)
 
 
-        //val lastConsumption = databaseApp.getLastConsumption(selectedVehicleHome.toString())
-        Log.d("provadico", "$lastConsumption")
-        Log.d("consum", "$consumoCo2")
+
+
         val co2Difference = lastConsumption.let {
             consumoCo2 - it
         }
@@ -230,7 +229,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
             location?.let {
                 val latitude = location.latitude
                 val longitude = location.longitude
-                Log.d("caa","$latitude $longitude")
+
 
                 saveLocationData(latitude, longitude)
             }
@@ -250,7 +249,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
         val selectedVehicleHome = arguments?.getString("data")
         selectedVehicleHome?.let { vehicleName ->
             val locations = databaseApp.getLocationsForVehicle(vehicleName)
-            Log.d("fsa","$locations")
+
             for (location in locations) {
                 val latitude = location.first
                 val longitude = location.second
