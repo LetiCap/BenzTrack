@@ -179,14 +179,16 @@ class HomeFragment : Fragment() {
         val manut = database.getSumColumn("manutenzione", tableName).toFloat()
 
         // Log the values
-        Log.d("HomeFragment", "Bollo: $bollo, Insurance: $assi, Fuel: $benz, yMaintenance: $manut")
+        Log.d("HomeFragment", "Bollo: $bollo, Insurance: $assi, Fuel: $benz, Maintenance: $manut")
 
         // Adding entries, initializing to 0 if needed
 
         entries.add(PieEntry(if (bollo == 0f) 0.01f else bollo , "Bollo"))
         entries.add(PieEntry(if (assi == 0f) 0.01f else assi, "Insurance"))
         entries.add(PieEntry(if (benz == 0f) 0.01f else benz, "Fuel"))
-        entries.add(PieEntry(if (benz == 0f) 0.01f else manut, "Maintenance"))
+        entries.add(PieEntry(if (manut == 0f) 0.01f else manut, "Maintenance"))
+
+        pieChart.invalidate()
 
         // Setting pie data set
         val dataSet = PieDataSet(entries, "")

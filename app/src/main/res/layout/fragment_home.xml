@@ -24,8 +24,7 @@
         android:clickable="true" />
 
 
-    <!-- TextView per l'intestazione -->
-    <!-- Centra il testo orizzontalmente -->
+
 
     <!-- PieChart -->
     <com.github.mikephil.charting.charts.PieChart
@@ -40,6 +39,5 @@
         />
     </LinearLayout>
 
-    <!-- TextViews per le categorie -->
 
 </FrameLayout>
