@@ -1,8 +1,5 @@
 package com.example.benztrack
 
-
-import android.R.id.message
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -19,12 +16,11 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.PercentFormatter
 
 
 class HomeFragment : Fragment() {
 
-    lateinit var pieChart: PieChart
+    private lateinit var pieChart: PieChart
 
 
     override fun onCreateView(
@@ -167,7 +163,7 @@ class HomeFragment : Fragment() {
         pieChart.data = data
 
         // Undo all highlights
-        pieChart.setHighlightPerTapEnabled(false)
+        pieChart.isHighlightPerTapEnabled = false
 
         // Refreshing the chart
         pieChart.invalidate()
@@ -223,7 +219,7 @@ class HomeFragment : Fragment() {
         pieChart.data = data
 
         // Undo all highlights
-        pieChart.setHighlightPerTapEnabled(false)
+        pieChart.isHighlightPerTapEnabled = false
 
         // Refreshing the chart
         pieChart.invalidate()

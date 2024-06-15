@@ -283,54 +283,16 @@ class DatabaseApp(val context: Context) :
 
 
 
-    fun getLastKmValue(tableName: String): Double? {
-        val query = "SELECT $COLUMN_KM FROM $tableName "
-        var lastKm: Double? = null
-
-        val db = readableDatabase
-        val cursor = db.rawQuery(query, null)
-
-        cursor.use { // Usa il blocco use per assicurare la chiusura automatica del cursore
-            if (cursor.moveToLast()) {
-                lastKm = cursor.getDouble(cursor.getColumnIndexOrThrow("KM"))
-            }
-        } // Il cursore verrà chiuso automaticamente qui
-
-        db.close()
-
-        return lastKm
-    }
-
-
-
     fun getSumColumn(columnName:String, tableName: String): Double {
         val dati= getDataColumnDouble(columnName,tableName)
         var sum = 0.0
         for (data in dati) {
-            if (data != null) {
-                sum += data
-            }
+            sum += data
+
         }
         Log.d("DatabaseApp", " $sum")
 
         return sum
-    }
-
-
-    fun getLastConsumption(vehicleName: String): Double? {
-        val db = readableDatabase
-        val query = "SELECT $COLUMN_CONSUME FROM $vehicleName ORDER BY $COLUMN_DATE DESC LIMIT 1"
-        var lastConsumption: Double? = null
-
-        val cursor = db.rawQuery(query, null)
-        cursor.use {
-            if (it.moveToFirst()) {
-                lastConsumption = it.getDouble(it.getColumnIndexOrThrow(COLUMN_CONSUME))
-            }
-        }
-
-        db.close()
-        return lastConsumption
     }
 
 

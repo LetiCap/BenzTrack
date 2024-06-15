@@ -48,7 +48,7 @@
 
         <TextView
             android:id="@+id/txtVehicle"
-            android:layout_width="390dp"
+            android:layout_width="378dp"
             android:layout_height="wrap_content"
 
             android:textColor="@color/colorBlack"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
-            android:text="Consumo medio:"
+            android:text="Consumo medio di CO2:"
             android:textColor="@color/colorBlack"
             android:textSize="18sp" />
 

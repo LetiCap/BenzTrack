@@ -16,7 +16,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
 class AddManutenzione : Fragment() {
-    lateinit var lineChart: LineChart
+    private lateinit var lineChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

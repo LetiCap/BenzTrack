@@ -7,10 +7,8 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -18,9 +16,9 @@ import com.github.mikephil.charting.data.LineDataSet
 
 class FuelGraphs : AppCompatActivity() {
 
-    lateinit var lineChart1: LineChart
-    lateinit var lineChart2: LineChart
-    lateinit var lineChart3: LineChart
+    private lateinit var lineChart1: LineChart
+    private lateinit var lineChart2: LineChart
+    private lateinit var lineChart3: LineChart
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -103,6 +101,7 @@ class FuelGraphs : AppCompatActivity() {
     ): ArrayList<Entry> {
         val entries = ArrayList<Entry>()
         val dataFromDatabase = database.getDataColumnDouble(colonna, tableName)
+
 
         for ((index, value) in dataFromDatabase.withIndex()) {
             val entry = Entry(index.toFloat(), value.toFloat())

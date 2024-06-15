@@ -1,6 +1,5 @@
 package com.example.benztrack
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -18,7 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -49,7 +47,7 @@ class AddFuel : Fragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         rootView = inflater.inflate(R.layout.fragment_fuel, container, false)
 
         // Initialize the MapView
@@ -101,8 +99,13 @@ class AddFuel : Fragment(), OnMapReadyCallback {
                 val SpentDouble = SpentString.toDouble()
                 val FuelDouble = FuelString.toDouble()
                 KmDouble = KmString.toDouble()
-                lastKM= databaseApp.getLastKmValue( tableName)
-                if(lastKM==null) lastKM=0.0
+                var lastKMArray = databaseApp.getDataColumnDouble("KM", selectedVehicleHome.toString())
+                lastKM = if (lastKMArray.isEmpty()) {
+                    0.0
+                } else {
+                    lastKMArray.last()
+                }
+
 
                 databaseApp.insertValueforCar("benzina", tableName, SpentDouble)
                 databaseApp.insertValueforCar("CostoBenzina", tableName, FuelDouble)
@@ -141,15 +144,26 @@ class AddFuel : Fragment(), OnMapReadyCallback {
 
 
     private fun calculateAverageConsumption(): Double {
-        val consumoCo2 = (KmDouble - lastKM!!) * databaseApp.getCO2ofVeichle(selectedVehicleHome!!)
+
+        val consumoCo2 = (KmDouble - lastKM!!) * databaseApp.getCO2ofVeichle(selectedVehicleHome.toString())
+        val consumoList = databaseApp.getDataColumnDouble("consumoCO2", selectedVehicleHome.toString())
+        val lastConsumption = if (consumoList.isEmpty()) {
+            0.0
+        } else {
+            consumoList.last()
+        }
+
         databaseApp.insertValueforCar("consumoCO2", selectedVehicleHome.toString(), consumoCo2)
 
-        val lastConsumption = databaseApp.getLastConsumption(selectedVehicleHome!!)
-        val co2Difference = lastConsumption?.let {
-            consumoCo2 - it
-        } ?: 0.0
 
-        if (co2Difference < 0) {
+        //val lastConsumption = databaseApp.getLastConsumption(selectedVehicleHome.toString())
+        Log.d("provadico", "$lastConsumption")
+        Log.d("consum", "$consumoCo2")
+        val co2Difference = lastConsumption.let {
+            consumoCo2 - it
+        }
+
+        if (co2Difference <= 0) {
             // Se la differenza è negativa, invia una notifica di elogio
             notification.sendCO2PraiseNotification(co2Difference)
         } else {

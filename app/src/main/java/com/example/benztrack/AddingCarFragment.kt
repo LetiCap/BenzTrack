@@ -86,12 +86,12 @@ class AddingCarFragment : Fragment() {
 
 
     private suspend fun populateSpinner(item: String, spinner: Spinner, lista: MutableList<String>, database: DatabaseApp) {
-        var scritta = ""
+
         var tabella=""
         when (item) {
-            "Year" -> { scritta = "Anno" ; tabella ="YearsTable" }
-            "Type" -> {scritta = "Tipo"; tabella ="TypesTable" }
-            "Make" -> {scritta = "Marchio"; tabella ="MakesTable" }
+            "Year" -> { tabella ="YearsTable" }
+            "Type" -> {tabella ="TypesTable" }
+            "Make" -> { tabella ="MakesTable" }
         }
 
         lista.add(0, "Select  $item")
